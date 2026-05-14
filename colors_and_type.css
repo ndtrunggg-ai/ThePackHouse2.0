@@ -1,0 +1,256 @@
+/* =========================================================
+   The Pack House — Design Tokens
+   Heritage trunk-maker palette. Hanoi, est. system.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  /* ---------- Brand neutrals (the "linen" & "leather" stack) ---------- */
+  --ph-cream-50:  #FBF7EF;   /* page wash, lightest paper */
+  --ph-cream-100: #F6F1E9;   /* primary light surface */
+  --ph-cream-200: #F0E6D2;   /* card interior, "inner lining" */
+  --ph-cream-300: #E8DCC8;   /* divider tint, soft fill */
+  --ph-sand-300:  #E2D4BC;   /* hairline border (light) */
+  --ph-sand-400:  #C8A97A;   /* PRIMARY — brass / saddle tan */
+  --ph-sand-500:  #B09060;   /* hover / secondary text on cream */
+  --ph-bronze-500:#A8893A;   /* deeper brass — accents, rules */
+  --ph-bronze-600:#8A7030;   /* dark brass, stitching line */
+  --ph-cocoa-700: #4E3418;   /* leather mid */
+  --ph-cocoa-800: #3D2810;   /* leather dark */
+  --ph-cocoa-850: #2A1F0E;   /* near-black walnut, text on cream */
+  --ph-ink-900:   #1A140A;   /* deep ink */
+  --ph-ink-950:   #111009;   /* PRIMARY — onyx / "warehouse night" */
+  --ph-ink-border:#2A2010;   /* hairline border (dark) */
+  --ph-highlight: #E8C98A;   /* highlight on dark, "lit brass" */
+
+  /* ---------- Semantic — light surface ---------- */
+  --bg:           var(--ph-cream-100);
+  --bg-elevated: var(--ph-cream-50);
+  --bg-sunken:   var(--ph-cream-200);
+  --surface:     #FFFCF6;
+  --fg:          var(--ph-cocoa-850);   /* primary text */
+  --fg-muted:    var(--ph-sand-500);    /* secondary, labels */
+  --fg-soft:     var(--ph-bronze-600);  /* tertiary */
+  --accent:      var(--ph-sand-400);    /* brass — buttons, rules */
+  --accent-strong:var(--ph-bronze-500);
+  --border:      var(--ph-sand-300);
+  --border-soft: rgba(176,144,96,0.25);
+  --rule:        var(--ph-sand-400);
+
+  /* ---------- Semantic — dark surface (use inside .dark) ---------- */
+  --bg-dark:        var(--ph-ink-950);
+  --bg-dark-elev:   #181408;
+  --fg-dark:        #F2E8D8;
+  --fg-dark-muted:  var(--ph-sand-400);
+  --border-dark:    var(--ph-ink-border);
+
+  /* ---------- Status (warm-neutral, never neon) ---------- */
+  --ok:      #6E7E3A;       /* moss */
+  --warn:    #C68A2A;       /* amber */
+  --danger:  #9A2A1E;       /* rust */
+  --info:    #4E6B7A;       /* slate-blue */
+
+  /* ---------- Type — families ---------- */
+  --font-serif:   'Newsreader', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans:    'Inter', ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --font-mono:    ui-monospace, 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* ---------- Type — base scale ---------- */
+  --fs-12: 12px;
+  --fs-14: 14px;
+  --fs-16: 16px;
+  --fs-18: 18px;
+  --fs-20: 20px;
+  --fs-24: 24px;
+  --fs-32: 32px;
+  --fs-40: 40px;
+  --fs-56: 56px;
+  --fs-72: 72px;
+  --fs-96: 96px;
+
+  /* tracking */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0em;
+  --tracking-wide:  0.08em;
+  --tracking-wider: 0.18em;   /* est. labels */
+  --tracking-widest:0.42em;   /* tagline caps */
+
+  /* ---------- Spacing (4pt) ---------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* ---------- Radii — minimal, leather-stiff ---------- */
+  --r-0:  0px;
+  --r-sm: 2px;
+  --r-md: 4px;
+  --r-lg: 8px;
+  --r-xl: 12px;
+  --r-pill: 999px;
+
+  /* ---------- Borders ---------- */
+  --hairline: 0.75px solid var(--border);
+  --hairline-dark: 0.75px solid var(--border-dark);
+  --stitch: 1px dashed var(--ph-bronze-600);
+
+  /* ---------- Shadows — warm, low, paper-like ---------- */
+  --shadow-xs: 0 1px 0 rgba(74,52,24,0.06);
+  --shadow-sm: 0 1px 2px rgba(74,52,24,0.08), 0 0 0 0.5px rgba(176,144,96,0.18);
+  --shadow-md: 0 6px 18px -8px rgba(58,40,16,0.18), 0 1px 0 rgba(176,144,96,0.16);
+  --shadow-lg: 0 18px 48px -20px rgba(42,31,14,0.30), 0 2px 0 rgba(176,144,96,0.10);
+  --shadow-inset: inset 0 0 0 0.75px rgba(200,169,122,0.40);
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(.22,.61,.36,1);
+  --ease-in-out: cubic-bezier(.65,0,.35,1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+}
+
+/* =========================================================
+   Semantic typography — apply directly to elements
+   ========================================================= */
+
+html { color: var(--fg); background: var(--bg); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+
+.h-display, h1.display {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(48px, 7vw, var(--fs-96));
+  line-height: 0.98;
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+}
+
+h1, .h1 {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--fs-56);
+  line-height: 1.04;
+  letter-spacing: -0.005em;
+  color: var(--fg);
+  margin: 0 0 var(--space-6);
+}
+
+h2, .h2 {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--fs-40);
+  line-height: 1.1;
+  color: var(--fg);
+  margin: 0 0 var(--space-5);
+}
+
+h3, .h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--fs-24);
+  line-height: 1.25;
+  color: var(--fg);
+  margin: 0 0 var(--space-3);
+}
+
+h4, .h4 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--fs-16);
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: var(--fg);
+}
+
+p, .p {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--fs-16);
+  line-height: 1.6;
+  color: var(--fg);
+  margin: 0 0 var(--space-4);
+}
+
+.lead {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--fs-20);
+  line-height: 1.55;
+  color: var(--fg);
+}
+
+.small, small {
+  font-size: var(--fs-14);
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.tagline {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.wordmark {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--fg);
+}
+
+code, kbd, .mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-14);
+  color: var(--ph-cocoa-700);
+  background: var(--ph-cream-200);
+  padding: 1px 6px;
+  border-radius: var(--r-sm);
+}
+
+/* =========================================================
+   Dark scope — wrap any region in .dark to flip surfaces
+   ========================================================= */
+
+.dark {
+  --bg: var(--bg-dark);
+  --bg-elevated: var(--bg-dark-elev);
+  --surface: var(--bg-dark-elev);
+  --fg: var(--fg-dark);
+  --fg-muted: var(--fg-dark-muted);
+  --fg-soft: var(--ph-sand-500);
+  --border: var(--border-dark);
+  --border-soft: rgba(200,169,122,0.18);
+  --rule: var(--ph-sand-400);
+  background: var(--bg-dark);
+  color: var(--fg-dark);
+}

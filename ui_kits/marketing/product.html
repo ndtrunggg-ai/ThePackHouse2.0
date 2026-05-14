@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Thule Subterra 2 Travel Pack · The Pack House</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .tph-pdp { padding: 56px 48px 96px; max-width: 1320px; margin: 0 auto; }
+  .tph-pdp-crumb { font-family: var(--font-sans); font-weight: 500; font-size: 10px;
+    letter-spacing: 0.32em; text-transform: uppercase; color: var(--ph-sand-500);
+    margin-bottom: 28px; }
+  .tph-pdp-crumb a { color: var(--ph-cocoa-850); text-decoration: none; }
+  .tph-pdp-crumb a:hover { color: var(--ph-bronze-500); }
+  .tph-pdp-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 72px; align-items: start; }
+  .tph-pdp-gallery { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 120px; }
+  .tph-pdp-main-img { aspect-ratio: 4/5; background: linear-gradient(180deg, #2A3027 0%, #1B2018 100%);
+    border-radius: 4px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .tph-pdp-main-img .tph-card-mountains { height: 50%; }
+  .tph-pdp-main-img svg.product { width: 36%; }
+  .tph-pdp-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .tph-pdp-thumb { aspect-ratio: 1/1; background: linear-gradient(180deg, #2A3027 0%, #1B2018 100%);
+    border-radius: 3px; border: 0.75px solid var(--ph-sand-300); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; opacity: 0.7;
+    transition: opacity 180ms, border-color 180ms; }
+  .tph-pdp-thumb:hover { opacity: 1; }
+  .tph-pdp-thumb.on { opacity: 1; border-color: var(--ph-cocoa-850); border-width: 1.5px; }
+  .tph-pdp-thumb svg { width: 50%; }
+
+  .tph-pdp-info { padding: 12px 0; }
+  .tph-pdp-brand { font-family: var(--font-sans); font-weight: 500; font-size: 11px;
+    letter-spacing: 0.32em; text-transform: uppercase; color: var(--ph-bronze-500);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+  .tph-pdp-brand .rule { display: inline-block; width: 28px; height: 0.5px; background: var(--ph-sand-400); }
+  .tph-pdp-name { font-family: var(--font-serif); font-weight: 300; font-size: 56px;
+    line-height: 1; color: var(--ph-cocoa-850); margin: 0 0 16px; letter-spacing: -0.01em; }
+  .tph-pdp-tagline { font-family: var(--font-serif); font-weight: 300; font-size: 19px;
+    font-style: italic; line-height: 1.55; color: var(--ph-cocoa-700); margin: 0 0 32px;
+    max-width: 460px; }
+  .tph-pdp-price { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 28px;
+    color: var(--ph-cocoa-850); margin-bottom: 6px; }
+  .tph-pdp-installments { font-family: var(--font-sans); font-size: 12px;
+    color: var(--ph-sand-500); margin-bottom: 28px; }
+  .tph-pdp-stock { display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-sans); font-size: 12px; color: #6E7E3A;
+    margin-bottom: 32px; }
+  .tph-pdp-stock::before { content: ""; width: 7px; height: 7px; background: #6E7E3A;
+    border-radius: 50%; display: inline-block; }
+  .tph-pdp-color-row { padding: 22px 0; border-top: 0.5px solid var(--ph-sand-300);
+    border-bottom: 0.5px solid var(--ph-sand-300); margin-bottom: 24px; }
+  .tph-pdp-color-lbl { font-family: var(--font-sans); font-weight: 500; font-size: 10px;
+    letter-spacing: 0.28em; text-transform: uppercase; color: var(--ph-sand-500);
+    margin-bottom: 12px; display: block; }
+  .tph-pdp-colors { display: flex; gap: 10px; }
+  .tph-pdp-color { width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    border: 1px solid var(--ph-sand-300); transition: box-shadow 180ms; }
+  .tph-pdp-color:hover { box-shadow: 0 0 0 2px var(--ph-cream-100), 0 0 0 3px var(--ph-sand-400); }
+  .tph-pdp-color.on { box-shadow: 0 0 0 2px var(--ph-cream-100), 0 0 0 3px var(--ph-cocoa-850); }
+  .tph-pdp-actions { display: flex; gap: 12px; margin-bottom: 32px; }
+  .tph-pdp-add { flex: 1; padding: 18px; font-family: var(--font-sans); font-weight: 500;
+    font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase;
+    background: var(--ph-cocoa-850); color: var(--ph-cream-200); border: none;
+    border-radius: 2px; cursor: pointer; transition: background 180ms; }
+  .tph-pdp-add:hover { background: var(--ph-cocoa-700); }
+  .tph-pdp-wish { width: 56px; height: 56px; border: 0.75px solid var(--ph-cocoa-850);
+    background: transparent; border-radius: 2px; cursor: pointer; color: var(--ph-cocoa-850); }
+  .tph-pdp-wish svg { width: 18px; height: 18px; }
+
+  .tph-pdp-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 32px;
+    padding: 24px 0; border-top: 0.5px solid var(--ph-sand-300);
+    margin-bottom: 28px; }
+  .tph-pdp-spec dt { font-family: var(--font-sans); font-weight: 500; font-size: 9px;
+    letter-spacing: 0.28em; text-transform: uppercase; color: var(--ph-sand-500);
+    margin-bottom: 4px; }
+  .tph-pdp-spec dd { font-family: var(--font-serif); font-size: 16px;
+    color: var(--ph-cocoa-850); margin: 0; }
+
+  .tph-pdp-accordion { border-top: 0.5px solid var(--ph-sand-300); }
+  .tph-pdp-row { border-bottom: 0.5px solid var(--ph-sand-300); padding: 20px 0; }
+  .tph-pdp-row-head { display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; }
+  .tph-pdp-row-head h3 { font-family: var(--font-serif); font-weight: 400; font-size: 18px;
+    color: var(--ph-cocoa-850); margin: 0; }
+  .tph-pdp-row-toggle { font-family: var(--font-serif); font-weight: 300; font-size: 22px;
+    color: var(--ph-sand-500); }
+  .tph-pdp-row-body { font-family: var(--font-sans); font-size: 14px; line-height: 1.65;
+    color: var(--ph-cocoa-700); margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="Nav.jsx"></script>
+<script type="text/babel" src="Footer.jsx"></script>
+<script type="text/babel" src="CartDrawer.jsx"></script>
+
+<script type="text/babel">
+function ProductPage() {
+  const [cartOpen, setCartOpen] = React.useState(false);
+  const [items, setItems] = React.useState([]);
+  const [color, setColor] = React.useState("black");
+  const [thumb, setThumb] = React.useState(0);
+  const [openRow, setOpenRow] = React.useState("materials");
+
+  const colors = [
+    { id: "black",  name: "Black",        hex: "#1A140A" },
+    { id: "olive",  name: "Dark Forest",  hex: "#3A4030" },
+    { id: "sand",   name: "Wood Thrush",  hex: "#8B7A52" },
+  ];
+
+  const handleAdd = () => {
+    const swatch = colors.find(c => c.id === color).hex;
+    setItems((arr) => [...arr, {
+      name: "Thule Subterra 2 Travel Pack 30L",
+      color: colors.find(c => c.id === color).name,
+      price: 5890000,
+      swatch: `linear-gradient(180deg, ${swatch}, ${swatch}cc)`
+    }]);
+    setCartOpen(true);
+  };
+  const handleRemove = (i) => setItems((arr) => arr.filter((_, j) => j !== i));
+
+  const productSvg = (
+    <svg className="product" viewBox="0 0 100 130" fill="none" stroke="#F5F4EE" strokeWidth="1.5">
+      <rect x="22" y="20" width="56" height="100" rx="6"/>
+      <path d="M34,20 Q34,8 50,8 Q66,8 66,20"/>
+      <line x1="22" y1="48" x2="78" y2="48"/>
+      <rect x="42" y="58" width="16" height="38" rx="1"/>
+      <circle cx="28" cy="28" r="1.5" fill="#F5F4EE"/>
+      <circle cx="72" cy="28" r="1.5" fill="#F5F4EE"/>
+    </svg>
+  );
+
+  return (
+    <>
+      <Nav onCartOpen={() => setCartOpen(true)} cartCount={items.length} searchValue="" onSearchChange={() => {}} />
+
+      <main className="tph-pdp">
+        <div className="tph-pdp-crumb">
+          <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="shop.html">Shop</a> &nbsp;·&nbsp; <a href="shop.html">Thule</a> &nbsp;·&nbsp; Subterra 2 Travel Pack
+        </div>
+
+        <div className="tph-pdp-grid">
+          {/* Gallery */}
+          <div className="tph-pdp-gallery">
+            <div className="tph-pdp-main-img">
+              <div className="tph-card-mountains">
+                <svg viewBox="0 0 300 100" preserveAspectRatio="xMidYMax slice">
+                  <polygon points="0,100 60,42 110,78 160,28 220,68 270,46 300,72 300,100" fill="#DDE0D5" opacity="0.4"/>
+                  <polygon points="0,100 40,62 95,85 150,52 210,82 260,66 300,82 300,100" fill="#DDE0D5" opacity="0.55"/>
+                </svg>
+              </div>
+              {productSvg}
+            </div>
+            <div className="tph-pdp-thumbs">
+              {[0,1,2,3].map(i => (
+                <div key={i} className={"tph-pdp-thumb" + (thumb === i ? " on" : "")} onClick={() => setThumb(i)}>
+                  <svg viewBox="0 0 100 130" fill="none" stroke="#F5F4EE" strokeWidth="1.5">
+                    <rect x="22" y="20" width="56" height="100" rx="6"/>
+                    <path d="M34,20 Q34,8 50,8 Q66,8 66,20"/>
+                    <line x1="22" y1="48" x2="78" y2="48"/>
+                  </svg>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Info */}
+          <div className="tph-pdp-info">
+            <div className="tph-pdp-brand"><span className="rule"></span>THULE · SWEDEN · 1942</div>
+            <h1 className="tph-pdp-name">Subterra 2 Travel Pack 30 L</h1>
+            <p className="tph-pdp-tagline">
+              The carry-on that earns its keep. A 30-litre pack built to slide under
+              the seat in front of you and survive ten years of doing it.
+            </p>
+
+            <div className="tph-pdp-price">5,890,000 ₫</div>
+            <div className="tph-pdp-installments">or 4 × 1,472,500 ₫ interest-free with Atome</div>
+            <div className="tph-pdp-stock">In stock · Ready to ship from Hà Nội</div>
+
+            <div className="tph-pdp-color-row">
+              <span className="tph-pdp-color-lbl">Colour · {colors.find(c => c.id === color).name}</span>
+              <div className="tph-pdp-colors">
+                {colors.map(c => (
+                  <button key={c.id} className={"tph-pdp-color" + (color === c.id ? " on" : "")}
+                    style={{background: c.hex}} aria-label={c.name} onClick={() => setColor(c.id)} />
+                ))}
+              </div>
+            </div>
+
+            <div className="tph-pdp-actions">
+              <button className="tph-pdp-add" onClick={handleAdd}>Add to cart · 5,890,000 ₫</button>
+              <button className="tph-pdp-wish" aria-label="Save">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg>
+              </button>
+            </div>
+
+            <dl className="tph-pdp-specs">
+              <div className="tph-pdp-spec"><dt>Capacity</dt><dd>30 L</dd></div>
+              <div className="tph-pdp-spec"><dt>Weight</dt><dd>1.4 kg</dd></div>
+              <div className="tph-pdp-spec"><dt>Laptop fit</dt><dd>15.6"</dd></div>
+              <div className="tph-pdp-spec"><dt>Materials</dt><dd>Recycled polyester</dd></div>
+              <div className="tph-pdp-spec"><dt>Cabin legal</dt><dd>All major airlines</dd></div>
+              <div className="tph-pdp-spec"><dt>Warranty</dt><dd>Lifetime · Thule</dd></div>
+            </dl>
+
+            <div className="tph-pdp-accordion">
+              {[
+                { id: "materials", title: "Materials & build",
+                  body: "600D recycled polyester body, weatherproof YKK zippers, EVA-padded back panel and shoulder straps. Bluesign-approved fabrics." },
+                { id: "shipping", title: "Shipping & returns",
+                  body: "Free shipping over 2,000,000 ₫ within Việt Nam · 60-day returns on unused gear · Same-day delivery in inner Hà Nội for orders before 14:00." },
+                { id: "warranty", title: "Warranty & repairs",
+                  body: "Backed by Thule's lifetime limited warranty. Bring damaged packs into our Hàng Bè shop and we'll handle the claim on your behalf." },
+              ].map(row => (
+                <div className="tph-pdp-row" key={row.id}>
+                  <div className="tph-pdp-row-head" onClick={() => setOpenRow(openRow === row.id ? "" : row.id)}>
+                    <h3>{row.title}</h3>
+                    <span className="tph-pdp-row-toggle">{openRow === row.id ? "−" : "+"}</span>
+                  </div>
+                  {openRow === row.id && <div className="tph-pdp-row-body">{row.body}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+
+      <CartDrawer open={cartOpen} items={items} onClose={() => setCartOpen(false)} onRemove={handleRemove} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<ProductPage />);
+</script>
+
+</body>
+</html>
