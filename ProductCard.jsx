@@ -1,7 +1,16 @@
+// Recursively flattens a specs value (object, array, primitive) into a display string
+function flattenSpecs(val, depth) {
+  if (depth === undefined) depth = 0;
+  if (val === null || val === undefined) return '';
+  if (Array.isArray(val)) return val.map(function(v) { return flattenSpecs(v, depth + 1); }).filter(Boolean).join(' · ');
+  if (typeof val === 'object') return Object.values(val).map(function(v) { return flattenSpecs(v, depth + 1); }).filter(function(v) { return v && typeof v === 'string' && !/^\d+$/.test(v); }).join(', ');
+  return String(val);
+}
+
 // Brand-aware product card. Each brand gets its own visual treatment.
 function ProductCard({ p, onAdd, onView, lang }) {
   const isEn = lang === 'en';
-  const fmt = (n) => n.toLocaleString(isEn ? "en-US" : "vi-VN") + " ₫";
+  const fmt = (n) => (Number(n) || 0).toLocaleString(isEn ? 'en-US' : 'vi-VN') + ' ₫';
   
   const t = {
     addToCart: isEn ? "Add to cart" : "Thêm vào giỏ"
@@ -44,9 +53,18 @@ function ProductCard({ p, onAdd, onView, lang }) {
         )}
         {p.badge && <span className={"tph-card-badge tph-badge-" + p.badge.kind}>{p.badge.label}</span>}
 
-        {p.image_url ? (
-          <img src={p.image_url} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 0 }} />
-        ) : p.svg ? (
+        {(() => {
+          let url = p.image_url;
+          if (!url && p.image) {
+            const media = Array.isArray(p.image) ? p.image[0] : (p.image.data ? (Array.isArray(p.image.data) ? p.image.data[0] : p.image.data) : p.image);
+            url = media?.attributes?.url || media?.url;
+            if (url && url.startsWith('/')) url = 'http://localhost:1337' + url;
+          }
+          if (url) {
+            return <img src={url} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 0 }} />;
+          }
+          return null;
+        })() || (p.svg ? (
           <div className="tph-card-silhouette" dangerouslySetInnerHTML={{ __html: p.svg }} />
         ) : (
           <div className="tph-card-silhouette">
@@ -58,9 +76,9 @@ function ProductCard({ p, onAdd, onView, lang }) {
         )}
       </div>
       <div className="tph-card-body" style={{ zIndex: 1, position: 'relative' }}>
-        <div className="tph-card-brandline" onClick={() => onView && onView(p)} style={{ cursor: 'pointer' }}>{p.brand.replace('-', ' ')}</div>
+        <div className="tph-card-brandline" onClick={() => onView && onView(p)} style={{ cursor: 'pointer' }}>{(p.brand || '').replace('-', ' ')}</div>
         <h4 className="tph-card-name" onClick={() => onView && onView(p)} style={{ cursor: 'pointer' }}>{p.name}</h4>
-        <div className="tph-card-meta">{(p.specs || []).join(" · ")}</div>
+        <div className="tph-card-meta">{flattenSpecs(p.specs)}</div>
         <div className="tph-card-foot">
           <span className="tph-card-price">{fmt(p.price)}</span>
           <button className="tph-card-add" onClick={() => onAdd(p)} aria-label={`Add ${p.name} to cart`}>

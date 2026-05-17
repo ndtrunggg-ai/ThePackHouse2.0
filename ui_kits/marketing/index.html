@@ -39,9 +39,12 @@ function App() {
   const [selectedProduct, setSelectedProduct] = React.useState(null);
 
   React.useEffect(() => {
-    fetch('http://localhost:5000/api/products')
+    fetch('http://localhost:1337/api/products?populate=*')
       .then(res => res.json())
-      .then(data => setProducts(data));
+      .then(data => {
+        setProducts(data.data);
+      })
+      .catch(err => console.error('Failed to load products from CMS:', err));
   }, []);
 
   const handleAdd = (p) => {
@@ -54,7 +57,7 @@ function App() {
   const filteredCount = products.filter(p =>
     (brand === "all" || p.brand === brand) &&
     (type === "all" || p.type === type) &&
-    (!search.trim() || (p.name + " " + p.brand + " " + (p.specs ? p.specs.join(" ") : "")).toLowerCase().includes(search.toLowerCase()))
+    (!search.trim() || (p.name + ' ' + p.brand + ' ' + (Array.isArray(p.specs) ? p.specs.join(' ') : (p.specs && typeof p.specs === 'object' ? Object.values(p.specs).join(' ') : (p.specs || '')))).toLowerCase().includes(search.toLowerCase()))
   ).length;
 
   const scrollToShop = () => {

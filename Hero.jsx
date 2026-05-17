@@ -3,9 +3,10 @@ function Hero({ onShopAll, lang }) {
   
   const t = {
     eyebrow: isEn ? "AUTHORIZED RETAIL DISTRIBUTOR" : "ĐẠI LÝ PHÂN PHỐI HÀNH LÝ CHÍNH HÃNG",
-    title1: isEn ? "Carry your home," : "Đồng hành cùng bạn,",
-    title2: isEn ? "anywhere." : "mọi nẻo đường.",
-    lead: isEn ? "We curate the most durable gear for you — Thule, Samsonite, Case Logic, Pacsafe, Tumi, Boblbee. Every product on the shelf is tested for the long haul." : "Chúng tôi tuyển chọn những sản phẩm bền bỉ nhất dành cho bạn — Thule, Samsonite, Case Logic, Pacsafe, Tumi, Boblbee. Mỗi sản phẩm trên kệ đều được kiểm định chất lượng, sẵn sàng cho những chặng đường dài.",
+    title1: isEn ? "Carry your home," : "Đồng hành cùng",
+    title2: isEn ? "anywhere." : "bạn,",
+    title3: isEn ? "" : "mọi nẻo đường.",
+    lead: isEn ? "We curate the most durable gear for you — Thule, Case Logic, ALPAKA, Bamkel. Every product on the shelf is tested for the long haul." : "Chúng tôi tuyển chọn những sản phẩm bền bỉ nhất dành cho bạn — Thule, Case Logic, ALPAKA, Bamkel. Mỗi sản phẩm trên kệ đều được kiểm định chất lượng, sẵn sàng cho những chặng đường dài.",
     btnShop: isEn ? "Shop all brands" : "Xem tất cả thương hiệu",
     btnVisit: isEn ? "Visit store →" : "Ghé thăm cửa hàng →",
     strip: isEn ? "— NOW DISTRIBUTING —" : "— ĐANG PHÂN PHỐI —"
@@ -31,7 +32,11 @@ function Hero({ onShopAll, lang }) {
           <span className="tph-rule-light" />
         </div>
         <h1 className="tph-hero-title">
-          {t.title1}<br/><em>{t.title2}</em>
+          {isEn ? (
+            <>{t.title1}<br/><em>{t.title2}</em></>
+          ) : (
+            <>{t.title1} <em>{t.title2}</em><br/>{t.title3}</>
+          )}
         </h1>
         <p className="tph-hero-lead">
           {t.lead}
@@ -44,15 +49,24 @@ function Hero({ onShopAll, lang }) {
           <span className="tph-strip-lbl">{t.strip}</span>
           <div className="tph-strip-brands">
             <span className="tph-strip-brand thule-glyph">THULE</span>
-            <span className="tph-strip-brand sam-glyph">Samsonite</span>
             <span className="tph-strip-brand cl-glyph">CASE LOGIC</span>
-            <span className="tph-strip-brand pac-glyph">PACSAFE</span>
-            <span className="tph-strip-brand tumi-glyph">TUMI</span>
+            <span className="tph-strip-brand alpaka-glyph">ALPAKA</span>
+            <span className="tph-strip-brand bamkel-glyph">BAMKEL</span>
           </div>
         </div>
       </div>
 
-      <div className="tph-hero-art" aria-hidden="true" style={{ backgroundImage: 'url(http://localhost:5000/uploads/hero-image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: '500px', borderRadius: '12px' }}>
+      {/* Hero art: real photo fills the right panel */}
+      <div className="tph-hero-art" aria-hidden="true">
+        <img
+          src="./assets/hero-bg.jpg"
+          alt=""
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover',
+            objectPosition: 'center', display: 'block'
+          }}
+          onError={(e) => { e.target.style.display = 'none'; }}
+        />
         <div className="tph-hero-vignette" />
       </div>
     </section>

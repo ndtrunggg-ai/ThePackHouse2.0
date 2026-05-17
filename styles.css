@@ -11,6 +11,8 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
   padding: 22px 48px; gap: 24px; }
 .tph-nav-left, .tph-nav-right { display: flex; gap: 28px; align-items: center; }
 .tph-nav-right { justify-content: flex-end; }
+.tph-wordmark-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.tph-nav-logo { height: 32px; width: auto; object-fit: contain; }
 .tph-nav-link { font-family: var(--font-sans); font-weight: 500; font-size: 11px;
   letter-spacing: 0.22em; text-transform: uppercase; color: var(--ph-cocoa-850);
   text-decoration: none; cursor: pointer; transition: color 180ms; }
@@ -222,11 +224,16 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
   margin: 0 0 18px; }
 
 /* ===== NAV SEARCH ===== */
-.tph-nav-inner { grid-template-columns: 1fr auto 1fr; }
-.tph-nav-links { display: flex; gap: 28px; align-items: center; margin-right: 28px; }
+.tph-nav-inner { grid-template-columns: auto 1fr; justify-content: space-between; }
+.tph-nav-links { display: flex; gap: 28px; align-items: center; margin-right: 0; }
 .tph-nav-link.active { color: var(--ph-bronze-500); }
-.tph-nav-search { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 600px; min-width: 360px; margin: 0 auto;
-  padding: 10px 14px; border: 0.75px solid var(--ph-sand-300); border-radius: 2px;
+.tph-lang-toggle { display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.1em; color: var(--ph-cocoa-850); }
+.tph-lang-btn { background: transparent; border: none; padding: 4px; cursor: pointer; color: var(--ph-sand-500); transition: color 180ms; font-weight: 500; font-family: var(--font-sans); }
+.tph-lang-btn:hover { color: var(--ph-cocoa-850); }
+.tph-lang-btn.active { color: var(--ph-bronze-500); font-weight: 700; }
+.tph-lang-sep { color: var(--ph-sand-300); }
+.tph-nav-search { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 300px; min-width: 240px; margin-right: 28px;
+  padding: 8px 14px; border: 0.75px solid var(--ph-sand-300); border-radius: 2px;
   background: var(--ph-cream-50); transition: border-color 180ms; }
 .tph-nav-search:focus-within { border-color: var(--ph-cocoa-850); }
 .tph-nav-search svg { width: 14px; height: 14px; color: var(--ph-sand-500); flex-shrink: 0; }
@@ -242,10 +249,9 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
 .tph-strip-brands { display: flex; gap: 26px; align-items: center; flex-wrap: wrap; }
 .tph-strip-brand { font-size: 14px; color: var(--ph-cocoa-700); }
 .thule-glyph { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.32em; }
-.sam-glyph   { font-family: var(--font-serif); font-weight: 400; font-style: italic; letter-spacing: 0.06em; font-size: 17px; }
 .cl-glyph    { font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: 0.28em; }
-.pac-glyph   { font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.32em; }
-.tumi-glyph  { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.32em; }
+.alpaka-glyph { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; }
+.bamkel-glyph { font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; }
 
 .tph-hero-shelf { position: absolute; inset: 80px 80px; display: flex; flex-direction: column;
   gap: 32px; justify-content: center; align-items: stretch; }
@@ -319,6 +325,7 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
   letter-spacing: 0.28em; text-transform: uppercase; border-radius: 1px; }
 .tph-badge-new { background: var(--ph-cocoa-850); color: var(--ph-cream-100); }
 .tph-badge-low { background: #9A2A1E; color: var(--ph-cream-100); }
+.tph-badge-sale { background: #C8401E; color: #fff; }
 .tph-card-silhouette { width: 60%; }
 .tph-card-silhouette svg { width: 100%; display: block; }
 .tph-card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }

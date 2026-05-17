@@ -56,9 +56,12 @@ function ShopPage() {
   const [sort, setSort] = React.useState("featured");
 
   React.useEffect(() => {
-    fetch('http://localhost:5000/api/products')
+    fetch('http://localhost:1337/api/products?populate=*')
       .then(res => res.json())
-      .then(data => setProducts(data));
+      .then(data => {
+        setProducts(data.data);
+      })
+      .catch(err => console.error('Failed to load products from CMS:', err));
   }, []);
 
   const handleAdd = (p) => {
@@ -86,7 +89,7 @@ function ShopPage() {
             <h1 className="tph-shop-page-title">Khám phá<br/><em>Bộ sưu tập.</em></h1>
             <div className="tph-shop-stats">
               <div className="tph-shop-stat"><span className="tph-shop-stat-num">{products.length}</span><span className="tph-shop-stat-lbl">Sản phẩm</span></div>
-              <div className="tph-shop-stat"><span className="tph-shop-stat-num">5</span><span className="tph-shop-stat-lbl">Thương hiệu</span></div>
+              <div className="tph-shop-stat"><span className="tph-shop-stat-num">4</span><span className="tph-shop-stat-lbl">Thương hiệu</span></div>
               <div className="tph-shop-stat"><span className="tph-shop-stat-num">60 ngày</span><span className="tph-shop-stat-lbl">Đổi trả</span></div>
             </div>
           </div>

@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product",
+    "description": "Store products"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "sku": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "brand": {
+      "type": "enumeration",
+      "enum": ["thule", "case-logic", "alpaka", "bamkel"],
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["backpacks", "duffel", "luggage", "daypacks", "laptop-bags", "accessory"],
+      "required": true
+    },
+    "price": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "original_price": {
+      "type": "integer",
+      "required": false,
+      "default": 0
+    },
+    "quantity": {
+      "type": "integer",
+      "default": 0
+    },
+    "image": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "weight": {
+      "type": "string"
+    },
+    "origin": {
+      "type": "string"
+    },
+    "specs": {
+      "type": "json"
+    },
+    "description": {
+      "type": "richtext"
+    }
+  }
+}

@@ -26,29 +26,34 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
   return (
     <header className="tph-nav">
       <div className="tph-nav-inner">
-        <a className="tph-wordmark" href="#">The Pack House</a>
-        <div className="tph-nav-search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
-            <circle cx="11" cy="11" r="7" /><line x1="16.5" y1="16.5" x2="21" y2="21" />
-          </svg>
-          <input
-            type="search"
-            placeholder={t.searchPlaceholder}
-            value={searchValue}
-            onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
-            aria-label="Search products"
-          />
-        </div>
+        <a className="tph-wordmark-container" href="#">
+          <img src="./assets/logo.png" alt="Logo" className="tph-nav-logo" />
+          <span className="tph-wordmark">The Pack House</span>
+        </a>
         <div className="tph-nav-right">
+          <div className="tph-nav-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
+              <circle cx="11" cy="11" r="7" /><line x1="16.5" y1="16.5" x2="21" y2="21" />
+            </svg>
+            <input
+              type="search"
+              placeholder={t.searchPlaceholder}
+              value={searchValue}
+              onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
+              aria-label="Search products"
+            />
+          </div>
           <nav className="tph-nav-links">
             <a className="tph-nav-link" href="#" onClick={scrollToShop}>{t.shop}</a>
             <a className="tph-nav-link" href="#" onClick={scrollToShop}>{t.brands}</a>
             <a className="tph-nav-link" href="#" onClick={scrollToVisit}>{t.visit}</a>
+            <a className="tph-nav-link" href="#">{t.help}</a>
           </nav>
-          <a className="tph-nav-link" href="#">{t.help}</a>
-          <button className="tph-nav-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }} onClick={() => setLang(isEn ? 'vi' : 'en')}>
-            {isEn ? 'EN' : 'VN'}
-          </button>
+          <div className="tph-lang-toggle">
+            <button className={`tph-lang-btn ${isEn ? 'active' : ''}`} onClick={() => setLang('en')}>EN</button>
+            <span className="tph-lang-sep">|</span>
+            <button className={`tph-lang-btn ${!isEn ? 'active' : ''}`} onClick={() => setLang('vi')}>VN</button>
+          </div>
           <button className="tph-icon-btn" onClick={onCartOpen} aria-label={`Cart (${cartCount} items)`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
               <path d="M5 7h14l-1.5 11a2 2 0 0 1-2 1.7H8.5a2 2 0 0 1-2-1.7L5 7z" />

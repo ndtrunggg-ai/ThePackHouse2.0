@@ -40,7 +40,7 @@ function Footer({ lang }) {
           </div>
           <div>
             <div className="tph-footer-h">{t.brands}</div>
-            <a>Thule</a><a>Samsonite</a><a>Case Logic</a><a>Pacsafe</a><a>Tumi</a>
+            <a>Thule</a><a>Case Logic</a><a>ALPAKA</a><a>Bamkel</a>
           </div>
           <div>
             <div className="tph-footer-h">{t.support}</div>
