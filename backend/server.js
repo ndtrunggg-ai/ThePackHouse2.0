@@ -4,6 +4,8 @@ const sqlite3 = require('sqlite3').verbose();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
+const axios = require('axios');
 
 const app = express();
 const PORT = 5000;
@@ -116,3 +118,88 @@ app.post('/api/products/:id/upload', upload.single('image'), (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
+
+// ─── ZALOPAY INTEGRATION ────────────────────────────────────────────────────
+const ZALOPAY = {
+  appid: '2553',
+  key1: 'PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL',
+  key2: 'kLtgPl8HHhfvMuDHPwKfgfsY4Yd2ufjx',
+  endpoint: 'https://sb-openapi.zalopay.vn/v2/create',
+  query_endpoint: 'https://sb-openapi.zalopay.vn/v2/query',
+};
+
+// POST /api/zalopay/create-order
+app.post('/api/zalopay/create-order', async (req, res) => {
+  try {
+    const { amount, items, description, callback_url, redirect_url } = req.body;
+    const appTransId = new Date().toISOString().slice(2, 10).replace(/-/g, '') + '_' + Date.now();
+    const appTime = Date.now();
+
+    const order = {
+      appid: ZALOPAY.appid,
+      apptransid: appTransId,
+      appuser: 'packhouse_user',
+      apptime: appTime,
+      amount: amount,
+      item: JSON.stringify(items || []),
+      embeddata: JSON.stringify({ redirecturl: redirect_url || 'http://localhost:5000/checkout.html' }),
+      description: description || 'The Pack House - Thanh toán đơn hàng',
+      bankcode: '',
+      callback_url: callback_url || '',
+    };
+
+    // HMAC: appid|apptransid|appuser|amount|apptime|embeddata|item
+    const data = [
+      order.appid,
+      order.apptransid,
+      order.appuser,
+      order.amount,
+      order.apptime,
+      order.embeddata,
+      order.item
+    ].join('|');
+
+    order.mac = crypto.createHmac('sha256', ZALOPAY.key1).update(data).digest('hex');
+
+    const params = new URLSearchParams();
+    Object.entries(order).forEach(([k, v]) => params.append(k, v));
+
+    const response = await axios.post(ZALOPAY.endpoint, params, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+
+    res.json({ ...response.data, apptransid: appTransId });
+  } catch (err) {
+    console.error('ZaloPay create order error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/zalopay/callback  (ZaloPay calls this after payment)
+app.post('/api/zalopay/callback', (req, res) => {
+  const { data, mac } = req.body;
+  const expectedMac = crypto.createHmac('sha256', ZALOPAY.key2).update(data).digest('hex');
+  if (mac !== expectedMac) {
+    return res.json({ returncode: -1, returnmessage: 'mac not equal' });
+  }
+  const parsed = JSON.parse(data);
+  console.log('ZaloPay callback - order paid:', parsed.apptransid);
+  res.json({ returncode: 1, returnmessage: 'success' });
+});
+
+// GET /api/zalopay/query-order?apptransid=...
+app.get('/api/zalopay/query-order', async (req, res) => {
+  try {
+    const { apptransid } = req.query;
+    const reqtime = Date.now();
+    const data = ZALOPAY.appid + '|' + apptransid + '|' + ZALOPAY.key1;
+    const mac = crypto.createHmac('sha256', ZALOPAY.key1).update(data).digest('hex');
+    const params = new URLSearchParams({ appid: ZALOPAY.appid, apptransid, reqtime, mac });
+    const response = await axios.post(ZALOPAY.query_endpoint, params, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});

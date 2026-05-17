@@ -3,6 +3,11 @@ function CartDrawer({ open, items, onClose, onRemove, lang }) {
   const total = items.reduce((s, i) => s + i.price, 0);
   const fmt = (n) => n.toLocaleString(isEn ? "en-US" : "vi-VN") + " ₫";
 
+  const handleCheckout = () => {
+    try { sessionStorage.setItem('tph_cart', JSON.stringify(items)); } catch(e) {}
+    window.location.href = 'checkout.html';
+  };
+
   const t = {
     yourCart: isEn ? "YOUR CART" : "GIỎ HÀNG CỦA BẠN",
     empty: isEn ? "Your cart is unpacked." : "Giỏ hàng đang trống.",
@@ -36,7 +41,14 @@ function CartDrawer({ open, items, onClose, onRemove, lang }) {
           )}
           {items.map((it, i) => (
             <div key={i} className="tph-cart-line">
-              <div className="tph-cart-thumb" style={{ background: it.swatch || "linear-gradient(180deg,#C8A97A,#8A7030)" }} />
+              <div className="tph-cart-thumb">
+                {it.image ? (
+                  <img src={it.image} alt={it.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '2px', background: '#F5F3EF', display: 'block' }} />
+                ) : (
+                  <div style={{ width: '100%', height: '100%', background: it.swatch || "linear-gradient(180deg,#C8A97A,#8A7030)", borderRadius: '2px' }} />
+                )}
+              </div>
               <div className="tph-cart-info">
                 <div className="tph-cart-name">{it.name}</div>
                 <div className="tph-cart-meta">{it.color}</div>
@@ -53,7 +65,7 @@ function CartDrawer({ open, items, onClose, onRemove, lang }) {
             <span className="tph-cart-sub-val">{fmt(total)}</span>
           </div>
           <p className="tph-cart-note">{t.shipping}</p>
-          <button className="tph-btn tph-btn-primary tph-btn-block" disabled={items.length === 0}>
+          <button className="tph-btn tph-btn-primary tph-btn-block" disabled={items.length === 0} onClick={handleCheckout}>
             {t.checkout}
           </button>
         </footer>

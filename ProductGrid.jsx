@@ -23,7 +23,7 @@ function getImageUrls(p) {
 
 function ProductCard({ p, onAdd, onView, lang }) {
   const isEn = lang === 'en';
-  const fmt = (n) => (Number(n) || 0).toLocaleString(isEn ? 'en-US' : 'vi-VN') + ' ₫';
+  const fmt = (n) => (parseInt(n, 10) || 0).toLocaleString(isEn ? 'en-US' : 'vi-VN') + ' ₫';
   const t = { addToCart: isEn ? "Add to cart" : "Thêm vào giỏ" };
 
   const images = getImageUrls(p);

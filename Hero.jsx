@@ -59,7 +59,7 @@ function Hero({ onShopAll, lang }) {
       {/* Hero art: real photo fills the right panel */}
       <div className="tph-hero-art" aria-hidden="true">
         <img
-          src="./assets/hero-bg.jpg"
+          src="./assets/Thule background main page.jpg"
           alt=""
           style={{
             width: '100%', height: '100%', objectFit: 'cover',
