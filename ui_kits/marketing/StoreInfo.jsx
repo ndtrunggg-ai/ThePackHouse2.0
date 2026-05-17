@@ -42,18 +42,17 @@ function StoreInfo({ lang }) {
           <h3 className="tph-visit-addr">17 Ngõ 2 Phố Quần Ngựa<br/>Phường Ngọc Hà, Hà Nội, Việt Nam</h3>
           <p className="tph-visit-hours">{t.hours}</p>
         </div>
-        <div className="tph-visit-map" aria-hidden="true">
-          <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice">
-            <rect width="200" height="120" fill="#F0E6D2"/>
-            <path d="M0,40 L80,40 L80,0 M80,40 L80,120 M0,80 L200,80 M120,0 L120,120 M160,40 L200,40"
-                  fill="none" stroke="#B09060" strokeWidth="0.6" opacity="0.5"/>
-            <path d="M30,90 Q60,70 100,60 Q140,50 170,30"
-                  fill="none" stroke="#C8A97A" strokeWidth="1.5" strokeDasharray="3 3"/>
-            <circle cx="100" cy="60" r="5" fill="#2A1F0E"/>
-            <circle cx="100" cy="60" r="2" fill="#C8A97A"/>
-            <text x="108" y="58" fontFamily="Inter, sans-serif" fontSize="6" letterSpacing="2"
-                  fill="#2A1F0E">THE PACK HOUSE</text>
-          </svg>
+        <div className="tph-visit-map" style={{ borderRadius: '3px', overflow: 'hidden' }}>
+          <iframe
+            title="The Pack House location"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d930.9409845284921!2d105.815431!3d21.0421294!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab001e0f523b%3A0xdbe3d966e37763c!2sTLI%20Vi%E1%BB%87t%20Nam%20-%20THULE%20Shop!5e0!3m2!1sen!2s!4v1779002302462!5m2!1sen!2s"
+            width="100%"
+            height="100%"
+            style={{ border: 0, display: 'block', minHeight: '280px' }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </div>
     </section>
