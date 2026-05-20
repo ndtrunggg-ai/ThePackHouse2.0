@@ -11,7 +11,7 @@ function ProductModal({ product, onClose, onAdd, lang }) {
       return arr.map(function(m) {
         const url = m && (m.url || (m.attributes && m.attributes.url));
         if (!url) return null;
-        return url.startsWith('/') ? 'http://localhost:1337' + url : url;
+        return url.startsWith('/') ? `${window.ENV.API_URL}${url}` : url;
       }).filter(Boolean);
     }
     return [];

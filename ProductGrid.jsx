@@ -15,7 +15,7 @@ function getImageUrls(p) {
     return arr.map(function(media) {
       const url = media && (media.url || (media.attributes && media.attributes.url));
       if (!url) return null;
-      return url.startsWith('/') ? 'http://localhost:1337' + url : url;
+      return url.startsWith('/') ? `${window.ENV.API_URL}${url}` : url;
     }).filter(Boolean);
   }
   return [];

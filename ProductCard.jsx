@@ -58,7 +58,7 @@ function ProductCard({ p, onAdd, onView, lang }) {
           if (!url && p.image) {
             const media = Array.isArray(p.image) ? p.image[0] : (p.image.data ? (Array.isArray(p.image.data) ? p.image.data[0] : p.image.data) : p.image);
             url = media?.attributes?.url || media?.url;
-            if (url && url.startsWith('/')) url = 'http://localhost:1337' + url;
+            if (url && url.startsWith('/')) url = `${window.ENV.API_URL}${url}`;
           }
           if (url) {
             return <img src={url} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 0 }} />;
