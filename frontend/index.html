@@ -16,6 +16,7 @@
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
+  <script src="config.js"></script>
   <script type="text/babel" src="Nav.jsx?v=13"></script>
   <script type="text/babel" src="Hero.jsx?v=12"></script>
   <script type="text/babel" src="BrandTabs.jsx?v=10"></script>
@@ -65,7 +66,7 @@
       const [selectedProduct, setSelectedProduct] = React.useState(null);
 
       React.useEffect(() => {
-        fetch('http://localhost:1337/api/products?populate=*')
+        fetch(`${window.ENV.API_URL}/api/products?populate=*`)
           .then(res => res.json())
           .then(data => {
             // Strapi v5 returns flat objects, no need to extract .attributes
@@ -85,7 +86,7 @@
           const arr = Array.isArray(p.image) ? p.image : (p.image.data ? (Array.isArray(p.image.data) ? p.image.data : [p.image.data]) : [p.image]);
           for (const media of arr) {
             const url = media && (media.url || (media.attributes && media.attributes.url));
-            if (url) return url.startsWith('/') ? 'http://localhost:1337' + url : url;
+            if (url) return url.startsWith('/') ? `${window.ENV.API_URL}${url}` : url;
           }
         }
         return null;
