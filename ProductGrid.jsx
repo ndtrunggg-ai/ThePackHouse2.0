@@ -146,11 +146,6 @@ function ProductGrid({ brand, type, search, sort, onAdd, onView, onClearFilters,
   return (
     <div className="tph-grid">
       {list.map((p) => <ProductCard key={p.id || p.documentId} p={p} onAdd={onAdd} onView={onView} lang={lang} />)}
-      <article className="tph-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', textAlign: 'center', background: '#F5F4EE', border: '1px dashed #C8A97A', cursor: 'pointer' }} onClick={() => window.location.href = '/backend/admin.html'}>
-        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#C8A97A', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', marginBottom: '16px' }}>+</div>
-        <h4 className="tph-card-name" style={{ marginBottom: '8px' }}>{t.addNew}</h4>
-        <p className="tph-card-meta" style={{ margin: 0, color: '#8A7030' }}>{t.addDesc}</p>
-      </article>
     </div>
   );
 }
