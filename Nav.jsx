@@ -62,7 +62,7 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
           </div>
           <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'16px',fontSize:'14px',color:'var(--ph-cocoa-850)'}}>
             <span style={{fontSize:'18px',width:'28px',textAlign:'center'}}>✉️</span>
-            <span><a href="mailto:hello@thepackhouse.vn" style={{color:'var(--ph-bronze-500)',textDecoration:'none'}}>hello@thepackhouse.vn</a></span>
+            <span><a href="mailto:thepackhouse.vn@gmail.com" style={{color:'var(--ph-bronze-500)',textDecoration:'none'}}>thepackhouse.vn@gmail.com</a></span>
           </div>
           <div style={{marginTop:'20px',paddingTop:'20px',borderTop:'0.5px solid var(--ph-sand-300)',fontSize:'13px',color:'var(--ph-sand-500)',lineHeight:1.6}}>
             {t.popupHours}<br/>{t.popupAddr}

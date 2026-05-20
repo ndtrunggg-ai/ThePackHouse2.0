@@ -140,7 +140,7 @@ function Footer({ lang }) {
             <a style={linkStyle} href="https://maps.google.com/?q=17+Ngõ+2+Phố+Quần+Ngựa+Hà+Nội" target="_blank" rel="noopener noreferrer">Phường Ngọc Hà, Hà Nội, Việt Nam</a>
             <a style={linkStyle}>{t.open}</a>
             <a style={linkStyle} href="tel:0981228826">0981 228 826</a>
-            <a style={linkStyle} href="mailto:hello@thepackhouse.vn">hello@thepackhouse.vn</a>
+            <a style={linkStyle} href="mailto:thepackhouse.vn@gmail.com">thepackhouse.vn@gmail.com</a>
           </div>
         </div>
       </div>
