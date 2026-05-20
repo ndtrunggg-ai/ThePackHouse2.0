@@ -1,5 +1,5 @@
 /* The Pack House — Marketing site styles */
-@import url('../../colors_and_type.css');
+@import url('./colors_and_type.css');
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(--ph-cocoa-850); font-family: var(--font-sans); }
