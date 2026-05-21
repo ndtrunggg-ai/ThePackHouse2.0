@@ -37,17 +37,11 @@ function ProductModal({ product, onClose, onAdd, lang }) {
       background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center',
       zIndex: 1000, padding: '20px'
     }}>
-      <div className="tph-modal-content" onClick={e => e.stopPropagation()} style={{
-        background: '#fff', width: '100%', maxWidth: '840px', borderRadius: '12px',
-        display: 'flex', overflow: 'hidden', position: 'relative', maxHeight: '90vh'
-      }}>
-        <button onClick={onClose} style={{
-          position: 'absolute', top: '16px', right: '16px', background: 'transparent',
-          border: 'none', fontSize: '24px', cursor: 'pointer', zIndex: 10
-        }}>×</button>
+      <div className="tph-modal-content" onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} className="tph-modal-close">×</button>
 
         {/* ── Image panel with carousel ── */}
-        <div style={{ flex: 1, background: '#F5F4EE', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'center', position: 'relative', minHeight: '360px' }}>
+        <div className="tph-modal-left">
           {/* Main image */}
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px', position: 'relative' }}>
             {images.length > 0 ? (
@@ -103,7 +97,7 @@ function ProductModal({ product, onClose, onAdd, lang }) {
         </div>
 
         {/* ── Info panel ── */}
-        <div style={{ flex: 1, padding: '40px', overflowY: 'auto' }}>
+        <div className="tph-modal-right">
           <div style={{ fontSize: '12px', color: '#8A7030', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>
             {product.brand} · {product.sku}
           </div>
