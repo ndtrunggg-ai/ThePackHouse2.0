@@ -67,7 +67,7 @@
       const [selectedProduct, setSelectedProduct] = React.useState(null);
 
       React.useEffect(() => {
-        fetch(`${window.ENV.API_URL}/api/products?populate=*`)
+        fetch(`${window.ENV.API_URL}/api/products?populate=*&pagination[pageSize]=100`)
           .then(res => res.json())
           .then(data => {
             // Strapi v5 returns flat objects, no need to extract .attributes
