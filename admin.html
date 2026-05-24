@@ -223,28 +223,131 @@
               </div>
             );
           case 'customers':
+            const customerMap = {};
+            orders.forEach(o => {
+              const key = o.email || o.phone || o.customerName;
+              if (!key) return;
+              if (!customerMap[key]) {
+                customerMap[key] = {
+                  name: o.customerName,
+                  email: o.email,
+                  phone: o.phone,
+                  city: o.city,
+                  totalSpend: 0,
+                  orderCount: 0,
+                  lastOrder: o.createdAt
+                };
+              }
+              if (o.status !== 'cancelled') {
+                customerMap[key].totalSpend += (o.total || 0);
+              }
+              customerMap[key].orderCount += 1;
+            });
+            const customers = Object.values(customerMap).sort((a,b) => b.totalSpend - a.totalSpend);
             return (
-              <div className="empty-state" style={{marginTop:'40px'}}>
-                <span style={{fontSize:'32px'}}>👥</span>
-                <h3 style={{marginTop:'16px'}}>Dữ liệu Khách hàng</h3>
-                <p>Hệ thống CRM và lịch sử mua hàng đang được đồng bộ.</p>
+              <div className="admin-table-wrapper">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Khách hàng</th>
+                      <th>Liên hệ</th>
+                      <th>Khu vực</th>
+                      <th>Số đơn</th>
+                      <th>Tổng chi tiêu</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {customers.length === 0 ? (
+                      <tr><td colSpan="5"><div className="empty-state">Chưa có dữ liệu khách hàng.</div></td></tr>
+                    ) : customers.map((c, i) => (
+                      <tr key={i} style={{cursor:'default'}}>
+                        <td className="admin-td-customer" style={{fontWeight:500}}>{c.name}</td>
+                        <td style={{fontSize:'13px'}}>{c.email}<br/><span style={{color:'var(--text-muted)'}}>{c.phone}</span></td>
+                        <td>{c.city}</td>
+                        <td>{c.orderCount}</td>
+                        <td className="admin-td-total">{c.totalSpend.toLocaleString()} ₫</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             );
           case 'shipping':
+            const shippingOrders = orders.filter(o => o.status === 'processing' || o.status === 'shipped');
             return (
-              <div className="empty-state" style={{marginTop:'40px'}}>
-                <span style={{fontSize:'32px'}}>🚚</span>
-                <h3 style={{marginTop:'16px'}}>Theo dõi Vận chuyển</h3>
-                <p>Tính năng tích hợp API giao hàng (GHTK, Viettel Post) đang được xây dựng.</p>
+              <div className="admin-table-wrapper">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Mã đơn</th>
+                      <th>Khách hàng</th>
+                      <th>Địa chỉ giao hàng</th>
+                      <th>Hình thức</th>
+                      <th>Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {shippingOrders.length === 0 ? (
+                      <tr><td colSpan="5"><div className="empty-state">Không có đơn hàng nào đang chờ vận chuyển.</div></td></tr>
+                    ) : shippingOrders.map(o => (
+                      <tr key={o.documentId || o.id} onClick={() => setSelectedOrder(o)}>
+                        <td className="admin-td-order">#{o.id || o.documentId?.substring(0,4)}</td>
+                        <td className="admin-td-customer">{o.customerName}<br/><span style={{fontSize:'12px', color:'var(--text-muted)'}}>{o.phone}</span></td>
+                        <td style={{maxWidth:'280px', fontSize:'13px', lineHeight:'1.5'}}>{o.address}, {o.city}</td>
+                        <td>{o.shippingMethod === 'express' ? 'Hỏa tốc' : (o.shippingMethod === 'standard' ? 'Tiêu chuẩn' : 'COD')}</td>
+                        <td><span className={`admin-badge badge-${o.status}`}>{getStatusText(o.status)}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             );
           case 'analytics':
+            const totalItemsSold = orders.reduce((acc, o) => {
+              if (o.status === 'cancelled') return acc;
+              try {
+                const items = Array.isArray(o.items) ? o.items : JSON.parse(o.items || "[]");
+                return acc + items.length;
+              } catch(e) { return acc; }
+            }, 0);
+            
+            const validOrders = orders.filter(o => o.status !== 'cancelled');
+            const aov = validOrders.length > 0 ? (validOrders.reduce((acc, o) => acc + (o.total || 0), 0) / validOrders.length) : 0;
+            const potentialRev = orders.filter(o => o.status === 'pending' || o.status === 'processing').reduce((acc, o) => acc + (o.total || 0), 0);
+            const realizedRev = orders.filter(o => o.status === 'delivered' || o.status === 'shipped').reduce((acc, o) => acc + (o.total || 0), 0);
+            const cancelledOrders = orders.filter(o => o.status === 'cancelled').length;
+
             return (
-              <div className="empty-state" style={{marginTop:'40px'}}>
-                <span style={{fontSize:'32px'}}>📊</span>
-                <h3 style={{marginTop:'16px'}}>Báo cáo & Phân tích</h3>
-                <p>Biểu đồ doanh thu và phân tích hiệu suất đang được tổng hợp.</p>
-              </div>
+              <React.Fragment>
+                <div className="admin-stats">
+                  <div className="admin-stat-card">
+                    <span className="admin-stat-label">Doanh thu thực tế</span>
+                    <h3 className="admin-stat-value" style={{color:'var(--success)'}}>{realizedRev.toLocaleString()} ₫</h3>
+                    <span className="admin-stat-sub">Đã giao & Đang giao</span>
+                  </div>
+                  <div className="admin-stat-card">
+                    <span className="admin-stat-label">Doanh thu tiềm năng</span>
+                    <h3 className="admin-stat-value orange">{potentialRev.toLocaleString()} ₫</h3>
+                    <span className="admin-stat-sub">Chờ xử lý & Đóng gói</span>
+                  </div>
+                  <div className="admin-stat-card">
+                    <span className="admin-stat-label">Trung bình mỗi đơn</span>
+                    <h3 className="admin-stat-value">{Math.round(aov).toLocaleString()} ₫</h3>
+                    <span className="admin-stat-sub">Average Order Value</span>
+                  </div>
+                  <div className="admin-stat-card">
+                    <span className="admin-stat-label">Sản phẩm đã bán</span>
+                    <h3 className="admin-stat-value">{totalItemsSold}</h3>
+                    <span className="admin-stat-sub">Đã hủy {cancelledOrders} đơn</span>
+                  </div>
+                </div>
+
+                <div className="admin-table-wrapper" style={{padding:'60px 40px', textAlign:'center'}}>
+                  <span style={{fontSize:'40px'}}>📈</span>
+                  <h3 style={{marginTop:'16px', fontFamily:'var(--font-serif)', fontSize:'24px', color:'var(--text-main)'}}>Biểu đồ tăng trưởng</h3>
+                  <p style={{color:'var(--text-muted)'}}>Thu thập thêm dữ liệu đơn hàng để hiển thị biểu đồ xu hướng theo tuần.</p>
+                </div>
+              </React.Fragment>
             );
           default: return null;
         }
