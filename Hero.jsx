@@ -6,7 +6,7 @@ function Hero({ onShopAll, lang }) {
     title1: isEn ? "Carry your home," : "Đồng hành cùng",
     title2: isEn ? "anywhere." : "bạn,",
     title3: isEn ? "" : "mọi nẻo đường.",
-    lead: isEn ? "We curate the most durable gear for you — Thule, Case Logic, ALPAKA, Bamkel. Every product on the shelf is tested for the long haul." : "Chúng tôi tuyển chọn những sản phẩm bền bỉ nhất dành cho bạn — Thule, Case Logic, ALPAKA, Bamkel. Mỗi sản phẩm trên kệ đều được kiểm định chất lượng, sẵn sàng cho những chặng đường dài.",
+    lead: isEn ? "We curate the most durable gear for you — Thule, Case Logic. Every product on the shelf is tested for the long haul." : "Chúng tôi tuyển chọn những sản phẩm bền bỉ nhất dành cho bạn — Thule, Case Logic. Mỗi sản phẩm trên kệ đều được kiểm định chất lượng, sẵn sàng cho những chặng đường dài.",
     btnShop: isEn ? "Shop all brands" : "Xem tất cả thương hiệu",
     btnVisit: isEn ? "Visit store →" : "Ghé thăm cửa hàng →",
     strip: isEn ? "— NOW DISTRIBUTING —" : "— ĐANG PHÂN PHỐI —"
@@ -50,8 +50,8 @@ function Hero({ onShopAll, lang }) {
           <div className="tph-strip-brands">
             <span className="tph-strip-brand thule-glyph">THULE</span>
             <span className="tph-strip-brand cl-glyph">CASE LOGIC</span>
-            <span className="tph-strip-brand alpaka-glyph">ALPAKA</span>
-            <span className="tph-strip-brand bamkel-glyph">BAMKEL</span>
+            <span className="tph-strip-brand thule-glyph">THULE</span>
+            <span className="tph-strip-brand cl-glyph">CASE LOGIC</span>
           </div>
         </div>
       </div>

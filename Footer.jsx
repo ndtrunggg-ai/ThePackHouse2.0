@@ -119,8 +119,6 @@ function Footer({ lang }) {
             <div className="tph-footer-h">{t.brands}</div>
             <a style={linkStyle} onClick={scrollToShop}>Thule</a>
             <a style={linkStyle} onClick={scrollToShop}>Case Logic</a>
-            <a style={linkStyle} onClick={scrollToShop}>ALPAKA</a>
-            <a style={linkStyle} onClick={scrollToShop}>Bamkel</a>
           </div>
 
           {/* Support */}
