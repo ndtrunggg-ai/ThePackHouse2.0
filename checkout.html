@@ -198,8 +198,9 @@
           <div class="co-ship-info">
             <div class="co-ship-name">Nhanh</div>
             <div class="co-ship-desc">1–2 ngày làm việc</div>
+            <div class="co-ship-desc" id="express-note" style="color:var(--ph-cocoa-850);margin-top:4px">Nhân viên sẽ liên hệ thông báo phí giao hàng cụ thể.</div>
           </div>
-          <div class="co-ship-price" id="express-price">30.000 ₫</div>
+          <div class="co-ship-price" id="express-price" style="font-size:14px">50.000 - 100.000 ₫</div>
         </div>
       </div>
     </div>
@@ -359,7 +360,7 @@
 
   function selectShip(el, method) {
     selectedShipping = method;
-    shippingFee = method === 'express' ? 30000 : 0;
+    shippingFee = 0; // TBD
     document.querySelectorAll('.co-ship-opt').forEach(function(o) {
       o.classList.remove('selected');
       o.querySelector('input').checked = false;
@@ -419,6 +420,31 @@
 
     var total = calcTotal();
 
+    var orderData = {
+      data: {
+        customerName: document.getElementById('co-first').value.trim() + ' ' + document.getElementById('co-last').value.trim(),
+        email: document.getElementById('co-email').value.trim(),
+        phone: document.getElementById('co-phone').value.trim(),
+        address: document.getElementById('co-address').value.trim(),
+        city: document.getElementById('co-city').value.trim(),
+        total: total,
+        items: cart,
+        status: 'pending',
+        paymentMethod: selectedPayment,
+        shippingMethod: selectedShipping
+      }
+    };
+
+    try {
+      await fetch('http://localhost:1337/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+    } catch(e) {
+      console.error('Lỗi tạo đơn trên CMS', e);
+    }
+
     if (selectedPayment === 'cod') {
       setTimeout(function() {
         showAlert('Đặt hàng thành công! Chúng tôi sẽ liên hệ xác nhận đơn hàng của bạn sớm nhất.', 'success');
@@ -465,7 +491,7 @@
       breadCart: 'Giỏ hàng', breadInfo: 'Thông tin', breadPay: 'Thanh toán',
       contactTitle: 'Thông tin liên hệ', contactPh: 'Email hoặc số điện thoại',
       delivTitle: 'Địa chỉ giao hàng', firstPh: 'Họ', lastPh: 'Tên', addrPh: 'Địa chỉ', aptPh: 'Căn hộ, tầng, v.v. (tuỳ chọn)', cityPh: 'Thành phố', zipPh: 'Mã bưu chính (tuỳ chọn)', phonePh: 'Số điện thoại', saveLabel: 'Lưu thông tin cho lần mua sau',
-      shipTitle: 'Phương thức vận chuyển', shipStd: 'Tiêu chuẩn', shipStdDesc: '3–5 ngày làm việc', shipFree: 'Miễn phí', shipExpress: 'Nhanh', shipExpressDesc: '1–2 ngày làm việc',
+      shipTitle: 'Phương thức vận chuyển', shipStd: 'Tiêu chuẩn', shipStdDesc: '3–5 ngày làm việc', shipFree: 'Miễn phí', shipExpress: 'Nhanh', shipExpressDesc: '1–2 ngày làm việc', shipExpressNote: 'Nhân viên sẽ liên hệ thông báo phí giao hàng cụ thể.',
       payTitle: 'Thanh toán', paySecure: '🔒 Mọi giao dịch đều được mã hóa và bảo mật.',
       zpDesc: 'Thanh toán qua Ví ZaloPay, thẻ Visa/Master/JCB hoặc thẻ ATM nội địa. Bạn sẽ được chuyển đến cổng thanh toán ZaloPay để hoàn tất giao dịch.',
       codLabel: 'Thanh toán khi nhận hàng (COD)', codDesc: 'Thanh toán bằng tiền mặt khi nhận hàng. Áp dụng cho các đơn hàng nội thành Hà Nội.',
@@ -484,7 +510,7 @@
       breadCart: 'Cart', breadInfo: 'Information', breadPay: 'Payment',
       contactTitle: 'Contact information', contactPh: 'Email or phone number',
       delivTitle: 'Delivery address', firstPh: 'Last name', lastPh: 'First name', addrPh: 'Address', aptPh: 'Apartment, suite, etc. (optional)', cityPh: 'City', zipPh: 'Postal code (optional)', phonePh: 'Phone number', saveLabel: 'Save this information for next time',
-      shipTitle: 'Shipping method', shipStd: 'Standard', shipStdDesc: '3–5 business days', shipFree: 'Free', shipExpress: 'Express', shipExpressDesc: '1–2 business days',
+      shipTitle: 'Shipping method', shipStd: 'Standard', shipStdDesc: '3–5 business days', shipFree: 'Free', shipExpress: 'Express', shipExpressDesc: '1–2 business days', shipExpressNote: 'Staff will contact you regarding the delivery price.',
       payTitle: 'Payment', paySecure: '🔒 All transactions are secure and encrypted.',
       zpDesc: 'Pay via ZaloPay Wallet, Visa/Master/JCB card or domestic ATM card. You will be redirected to the ZaloPay payment gateway to complete your transaction.',
       codLabel: 'Cash on Delivery (COD)', codDesc: 'Pay with cash upon delivery. Available for Hanoi city orders.',
@@ -535,6 +561,8 @@
     if(shipDescs[0]) shipDescs[0].textContent = s.shipStdDesc;
     if(shipNames[1]) shipNames[1].textContent = s.shipExpress;
     if(shipDescs[1]) shipDescs[1].textContent = s.shipExpressDesc;
+    var expNote = document.getElementById('express-note');
+    if (expNote) expNote.textContent = s.shipExpressNote;
     document.querySelector('.co-ship-price').textContent = s.shipFree;
     // payment
     document.querySelector('#opt-zalopay .co-pay-body p').textContent = s.zpDesc;

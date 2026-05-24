@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The Pack House — Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="admin.css?v=2" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="./assets/logo.png" />
+</head>
+<body>
+
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script type="text/babel">
+    const API_URL = "http://localhost:1337";
+
+    function AdminApp() {
+      const [token, setToken] = React.useState(localStorage.getItem("admin_token"));
+      const [email, setEmail] = React.useState("");
+      const [password, setPassword] = React.useState("");
+      const [error, setError] = React.useState("");
+      const [orders, setOrders] = React.useState([]);
+      const [loading, setLoading] = React.useState(false);
+
+      const handleLogin = async (e) => {
+        e.preventDefault();
+        setError("");
+        try {
+          const res = await fetch(`${API_URL}/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, password })
+          });
+          const data = await res.json();
+          if (data.data && data.data.token) {
+            localStorage.setItem("admin_token", data.data.token);
+            setToken(data.data.token);
+          } else {
+            setError("Invalid credentials");
+          }
+        } catch (err) {
+          setError("Failed to connect to server");
+        }
+      };
+
+      const fetchOrders = async () => {
+        setLoading(true);
+        try {
+          const res = await fetch(`${API_URL}/content-manager/collection-types/api::order.order?sort=createdAt:DESC`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          if (res.status === 401 || res.status === 403) {
+            setToken(null);
+            localStorage.removeItem("admin_token");
+          } else {
+            const data = await res.json();
+            setOrders(data.results || []);
+          }
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      React.useEffect(() => {
+        if (token) {
+          fetchOrders();
+        }
+      }, [token]);
+
+      if (!token) {
+        return (
+          <div className="admin-login-wrapper">
+            <div className="admin-login-card">
+              <h2 className="admin-login-title">Admin Login</h2>
+              {error && <div className="admin-error">{error}</div>}
+              <form onSubmit={handleLogin}>
+                <input 
+                  type="email" 
+                  className="admin-input" 
+                  placeholder="Email" 
+                  value={email} 
+                  onChange={e => setEmail(e.target.value)} 
+                  required 
+                />
+                <input 
+                  type="password" 
+                  className="admin-input" 
+                  placeholder="Password" 
+                  value={password} 
+                  onChange={e => setPassword(e.target.value)} 
+                  required 
+                />
+                <button type="submit" className="admin-btn">Sign In</button>
+              </form>
+            </div>
+          </div>
+        );
+      }
+
+      const totalRevenue = orders.reduce((acc, o) => acc + (o.total || 0), 0);
+      const newOrders = orders.filter(o => o.status === 'pending');
+      const inTransit = orders.filter(o => o.status === 'shipped');
+
+      return (
+        <div className="admin-layout">
+          {/* LEFT SIDEBAR */}
+          <div className="admin-sidebar">
+            <div className="admin-brand">
+              The Pack House
+              <div className="admin-brand-sub">Admin Panel</div>
+            </div>
+            <nav className="admin-nav">
+              <a href="#" className="admin-nav-item active">
+                <span className="admin-nav-icon">🛒</span>
+                Orders
+                {newOrders.length > 0 && <span className="admin-badge-red">{newOrders.length}</span>}
+              </a>
+              <a href="#" className="admin-nav-item">
+                <span className="admin-nav-icon">📦</span>
+                Products
+              </a>
+              <a href="#" className="admin-nav-item">
+                <span className="admin-nav-icon">👥</span>
+                Customers
+              </a>
+              <a href="#" className="admin-nav-item">
+                <span className="admin-nav-icon">🚚</span>
+                Shipping
+              </a>
+              <a href="#" className="admin-nav-item">
+                <span className="admin-nav-icon">📊</span>
+                Analytics
+              </a>
+            </nav>
+          </div>
+
+          {/* MAIN CONTENT */}
+          <div className="admin-main">
+            <header className="admin-header">
+              <h1 className="admin-title">Orders</h1>
+              <div className="admin-header-right">
+                <span className="admin-bell">🔔</span>
+                <div className="admin-avatar">TP</div>
+              </div>
+            </header>
+
+            <div className="admin-content">
+              <div className="admin-stats">
+                <div className="admin-stat-card">
+                  <span className="admin-stat-label">Total orders</span>
+                  <h3 className="admin-stat-value">{orders.length}</h3>
+                  <span className="admin-stat-sub">This month</span>
+                </div>
+                <div className="admin-stat-card">
+                  <span className="admin-stat-label">New today</span>
+                  <h3 className="admin-stat-value blue">{newOrders.length}</h3>
+                  <span className="admin-stat-sub">Needs action</span>
+                </div>
+                <div className="admin-stat-card">
+                  <span className="admin-stat-label">In transit</span>
+                  <h3 className="admin-stat-value orange">{inTransit.length}</h3>
+                  <span className="admin-stat-sub">Being shipped</span>
+                </div>
+                <div className="admin-stat-card">
+                  <span className="admin-stat-label">Revenue</span>
+                  <h3 className="admin-stat-value">{totalRevenue.toLocaleString()} ₫</h3>
+                  <span className="admin-stat-sub">Total</span>
+                </div>
+              </div>
+
+              <div className="admin-tabs">
+                <button className="admin-tab active">All</button>
+                <button className="admin-tab">New</button>
+                <button className="admin-tab">Processing</button>
+              </div>
+
+              <div className="admin-table-wrapper">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Order</th>
+                      <th>Customer</th>
+                      <th>Items</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr><td colSpan="4" style={{textAlign:'center', padding:'40px'}}><div className="loading-spinner"></div></td></tr>
+                    ) : orders.length === 0 ? (
+                      <tr><td colSpan="4"><div className="empty-state">No orders found.</div></td></tr>
+                    ) : (
+                      orders.map(o => {
+                        // Extract items text from JSON
+                        let itemsText = "Items";
+                        try {
+                          const items = Array.isArray(o.items) ? o.items : JSON.parse(o.items || "[]");
+                          if (items.length > 0) {
+                            itemsText = items.map(i => `${i.name} ×1`).join(", ");
+                          }
+                        } catch (e) {}
+
+                        return (
+                          <tr key={o.documentId || o.id}>
+                            <td className="admin-td-order">#{o.id || o.documentId?.substring(0,4)}</td>
+                            <td className="admin-td-customer">{o.customerName}<br/><span style={{fontSize:'12px', color:'var(--admin-text-muted)'}}>{o.city}</span></td>
+                            <td className="admin-td-items">{itemsText}</td>
+                            <td className="admin-td-total">{(o.total || 0).toLocaleString()} ₫</td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT SIDEBAR - NOTIFICATIONS */}
+          <div className="admin-right-sidebar">
+            <header className="admin-right-header">
+              <span className="admin-right-title">Notifications</span>
+              <span className="admin-right-count">4 new</span>
+            </header>
+            <div className="admin-notif-list">
+              <div className="admin-notif red">
+                <div className="admin-notif-header">
+                  <span className="admin-notif-icon">⚠</span>
+                  <span className="admin-notif-title">Payment failed</span>
+                </div>
+                <div className="admin-notif-desc">Order #1042 — Nguyen Thi Lan. Retry or contact customer.</div>
+                <div className="admin-notif-tags">
+                  <span className="admin-notif-tag">Email</span>
+                  <span className="admin-notif-tag">Telegram</span>
+                </div>
+                <div className="admin-notif-time">2 min ago</div>
+              </div>
+              <div className="admin-notif blue">
+                <div className="admin-notif-header">
+                  <span className="admin-notif-icon">🛍</span>
+                  <span className="admin-notif-title">New order</span>
+                </div>
+                <div className="admin-notif-desc">Order #1041 placed — Tran Van Minh. 2 items, 890,000 VND.</div>
+                <div className="admin-notif-tags">
+                  <span className="admin-notif-tag">Email</span>
+                  <span className="admin-notif-tag">Zalo</span>
+                  <span className="admin-notif-tag">Telegram</span>
+                </div>
+                <div className="admin-notif-time">18 min ago</div>
+              </div>
+              <div className="admin-notif orange">
+                <div className="admin-notif-header">
+                  <span className="admin-notif-icon">⏱</span>
+                  <span className="admin-notif-title">Fulfillment delay</span>
+                </div>
+                <div className="admin-notif-desc">Order #1038 has been processing for 48h. Review needed.</div>
+                <div className="admin-notif-tags">
+                  <span className="admin-notif-tag">Telegram</span>
+                </div>
+                <div className="admin-notif-time">1 hr ago</div>
+              </div>
+              <div className="admin-notif green">
+                <div className="admin-notif-header">
+                  <span className="admin-notif-icon">🚚</span>
+                  <span className="admin-notif-title">Order shipped</span>
+                </div>
+                <div className="admin-notif-desc">Order #1037 dispatched. Customer notified via Zalo.</div>
+                <div className="admin-notif-tags">
+                  <span className="admin-notif-tag">Zalo</span>
+                </div>
+                <div className="admin-notif-time">3 hr ago</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<AdminApp />);
+  </script>
+</body>
+</html>

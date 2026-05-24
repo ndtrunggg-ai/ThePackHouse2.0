@@ -2,8 +2,6 @@ const BRANDS = [
   { id: "all",        name: "all",         cls: "" },
   { id: "thule",      name: "THULE",       cls: "thule-glyph", origin: "Sweden · 1942" },
   { id: "case-logic", name: "CASE LOGIC",  cls: "cl-glyph",    origin: "USA · 1984" },
-  { id: "alpaka",     name: "ALPAKA",      cls: "alpaka-glyph", origin: "Australia · 2016", link: "https://alpakagear.com/" },
-  { id: "bamkel",     name: "BAMKEL",      cls: "bamkel-glyph", origin: "South Korea", link: "https://www.bamkel.com/" },
 ];
 
 function BrandTabs({ selected, onSelect, lang }) {

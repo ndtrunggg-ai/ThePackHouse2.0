@@ -45,7 +45,7 @@ function StoreInfo({ lang }) {
         <div className="tph-visit-map" style={{ borderRadius: '3px', overflow: 'hidden' }}>
           <iframe
             title="The Pack House location"
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d930.9409845284921!2d105.815431!3d21.0421294!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab001e0f523b%3A0xdbe3d966e37763c!2sTLI%20Vi%E1%BB%87t%20Nam%20-%20THULE%20Shop!5e0!3m2!1sen!2s!4v1779002302462!5m2!1sen!2s"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.7778823795456!2d105.81327667665015!3d21.041571687335697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135abaee9eaf5db%3A0x6a144f595323ae09!2sThe%20Pack%20House!5e0!3m2!1sen!2s!4v1779639384479!5m2!1sen!2s"
             width="100%"
             height="100%"
             style={{ border: 0, display: 'block', minHeight: '280px' }}
