@@ -57,7 +57,8 @@ function AdminApp() {
 
   const handleUpdateStatus = async (order, newStatus) => {
     try {
-      const res = await fetch(`${API_URL}/content-manager/collection-types/api::order.order/${order.documentId}`, {
+      const targetId = order.documentId || order.id;
+      const res = await fetch(`${API_URL}/content-manager/collection-types/api::order.order/${targetId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -66,11 +67,16 @@ function AdminApp() {
         body: JSON.stringify({ status: newStatus })
       });
       if (res.ok) {
-        setOrders(orders.map(o => o.documentId === order.documentId ? { ...o, status: newStatus } : o));
+        setOrders(orders.map(o => (o.documentId || o.id) === targetId ? { ...o, status: newStatus } : o));
         setSelectedOrder({ ...selectedOrder, status: newStatus });
+      } else {
+        const errData = await res.json();
+        console.error("Error updating status:", errData);
+        alert("Không thể cập nhật trạng thái: " + (errData.error?.message || res.statusText));
       }
     } catch (e) {
       console.error('Failed to update status', e);
+      alert("Lỗi mạng khi cập nhật trạng thái");
     }
   };
 
