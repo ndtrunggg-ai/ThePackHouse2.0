@@ -33,7 +33,7 @@
     "items": {
       "type": "json"
     },
-    "status": {
+    "orderStatus": {
       "type": "enumeration",
       "enum": [
         "pending",

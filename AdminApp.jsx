@@ -64,11 +64,11 @@ function AdminApp() {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({ orderStatus: newStatus })
       });
       if (res.ok) {
-        setOrders(orders.map(o => (o.documentId || o.id) === targetId ? { ...o, status: newStatus } : o));
-        setSelectedOrder({ ...selectedOrder, status: newStatus });
+        setOrders(orders.map(o => (o.documentId || o.id) === targetId ? { ...o, orderStatus: newStatus } : o));
+        setSelectedOrder({ ...selectedOrder, orderStatus: newStatus });
       } else {
         const errData = await res.json();
         console.error("Error updating status:", errData);
@@ -117,8 +117,8 @@ function AdminApp() {
   }
 
   const totalRevenue = orders.reduce((acc, o) => acc + (o.total || 0), 0);
-  const newOrders = orders.filter(o => o.status === 'pending');
-  const inTransit = orders.filter(o => o.status === 'shipped');
+  const newOrders = orders.filter(o => (o.orderStatus || o.status) === 'pending' || (!o.orderStatus && !o.status));
+  const inTransit = orders.filter(o => (o.orderStatus || o.status) === 'shipped');
 
   const getStatusText = (status) => {
     switch(status) {
@@ -190,7 +190,7 @@ function AdminApp() {
                           <td className="admin-td-order">#{o.id || o.documentId?.substring(0,4)}</td>
                           <td className="admin-td-customer">{o.customerName}<br/><span style={{fontSize:'12px', color:'var(--text-muted)'}}>{o.city}</span></td>
                           <td className="admin-td-items" style={{maxWidth:'240px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{itemsText}</td>
-                          <td><span className={`admin-badge badge-${o.status || 'pending'}`}>{getStatusText(o.status)}</span></td>
+                          <td><span className={`admin-badge badge-${o.orderStatus || o.status || 'pending'}`}>{getStatusText(o.orderStatus || o.status)}</span></td>
                           <td className="admin-td-total">{(o.total || 0).toLocaleString()} ₫</td>
                         </tr>
                       );
@@ -225,7 +225,7 @@ function AdminApp() {
               lastOrder: o.createdAt
             };
           }
-          if (o.status !== 'cancelled') {
+          if ((o.orderStatus || o.status) !== 'cancelled') {
             customerMap[key].totalSpend += (o.total || 0);
           }
           customerMap[key].orderCount += 1;
@@ -260,7 +260,7 @@ function AdminApp() {
           </div>
         );
       case 'shipping':
-        const shippingOrders = orders.filter(o => o.status === 'processing' || o.status === 'shipped');
+        const shippingOrders = orders.filter(o => (o.orderStatus || o.status) === 'processing' || (o.orderStatus || o.status) === 'shipped');
         return (
           <div className="admin-table-wrapper">
             <table className="admin-table">
@@ -282,7 +282,7 @@ function AdminApp() {
                     <td className="admin-td-customer">{o.customerName}<br/><span style={{fontSize:'12px', color:'var(--text-muted)'}}>{o.phone}</span></td>
                     <td style={{maxWidth:'280px', fontSize:'13px', lineHeight:'1.5'}}>{o.address}, {o.city}</td>
                     <td>{o.shippingMethod === 'express' ? 'Hỏa tốc' : (o.shippingMethod === 'standard' ? 'Tiêu chuẩn' : 'COD')}</td>
-                    <td><span className={`admin-badge badge-${o.status}`}>{getStatusText(o.status)}</span></td>
+                    <td><span className={`admin-badge badge-${o.orderStatus || o.status || 'pending'}`}>{getStatusText(o.orderStatus || o.status)}</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -291,18 +291,18 @@ function AdminApp() {
         );
       case 'analytics':
         const totalItemsSold = orders.reduce((acc, o) => {
-          if (o.status === 'cancelled') return acc;
+          if ((o.orderStatus || o.status) === 'cancelled') return acc;
           try {
             const items = Array.isArray(o.items) ? o.items : JSON.parse(o.items || "[]");
             return acc + items.length;
           } catch(e) { return acc; }
         }, 0);
         
-        const validOrders = orders.filter(o => o.status !== 'cancelled');
+        const validOrders = orders.filter(o => (o.orderStatus || o.status) !== 'cancelled');
         const aov = validOrders.length > 0 ? (validOrders.reduce((acc, o) => acc + (o.total || 0), 0) / validOrders.length) : 0;
-        const potentialRev = orders.filter(o => o.status === 'pending' || o.status === 'processing').reduce((acc, o) => acc + (o.total || 0), 0);
-        const realizedRev = orders.filter(o => o.status === 'delivered' || o.status === 'shipped').reduce((acc, o) => acc + (o.total || 0), 0);
-        const cancelledOrders = orders.filter(o => o.status === 'cancelled').length;
+        const potentialRev = orders.filter(o => (o.orderStatus || o.status) === 'pending' || (o.orderStatus || o.status) === 'processing').reduce((acc, o) => acc + (o.total || 0), 0);
+        const realizedRev = orders.filter(o => (o.orderStatus || o.status) === 'delivered' || (o.orderStatus || o.status) === 'shipped').reduce((acc, o) => acc + (o.total || 0), 0);
+        const cancelledOrders = orders.filter(o => (o.orderStatus || o.status) === 'cancelled').length;
 
         return (
           <React.Fragment>
@@ -444,7 +444,7 @@ function AdminApp() {
                 <div className="admin-detail-label">Cập nhật trạng thái</div>
                 <select 
                   className="admin-status-select" 
-                  value={selectedOrder.status || 'pending'} 
+                  value={selectedOrder.orderStatus || selectedOrder.status || 'pending'} 
                   onChange={(e) => handleUpdateStatus(selectedOrder, e.target.value)}
                 >
                   <option value="pending">Chờ xử lý</option>
