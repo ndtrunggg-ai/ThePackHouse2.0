@@ -50,8 +50,6 @@ function Hero({ onShopAll, lang }) {
           <div className="tph-strip-brands">
             <span className="tph-strip-brand thule-glyph">THULE</span>
             <span className="tph-strip-brand cl-glyph">CASE LOGIC</span>
-            <span className="tph-strip-brand thule-glyph">THULE</span>
-            <span className="tph-strip-brand cl-glyph">CASE LOGIC</span>
           </div>
         </div>
       </div>

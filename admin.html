@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>The Pack House — Quản trị</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="admin.css?v=2" />
+  <link rel="stylesheet" href="admin.css?v=5" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="./assets/logo.png" />
 </head>
@@ -17,7 +17,6 @@
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
   <script type="text/babel">
-    // Dynamically choose API URL. Use local proxy if on localhost, else use Vercel proxy.
     const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
       ? 'http://localhost:4000/proxy' 
       : '/proxy';
@@ -30,6 +29,7 @@
       const [orders, setOrders] = React.useState([]);
       const [loading, setLoading] = React.useState(false);
       const [activeTab, setActiveTab] = React.useState("orders");
+      const [selectedOrder, setSelectedOrder] = React.useState(null);
 
       const handleLogin = async (e) => {
         e.preventDefault();
@@ -74,6 +74,25 @@
         }
       };
 
+      const handleUpdateStatus = async (order, newStatus) => {
+        try {
+          const res = await fetch(`${API_URL}/content-manager/collection-types/api::order.order/${order.documentId}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+          });
+          if (res.ok) {
+            setOrders(orders.map(o => o.documentId === order.documentId ? { ...o, status: newStatus } : o));
+            setSelectedOrder({ ...selectedOrder, status: newStatus });
+          }
+        } catch (e) {
+          console.error('Failed to update status', e);
+        }
+      };
+
       React.useEffect(() => {
         if (token && activeTab === 'orders') {
           fetchOrders();
@@ -114,6 +133,17 @@
       const newOrders = orders.filter(o => o.status === 'pending');
       const inTransit = orders.filter(o => o.status === 'shipped');
 
+      const getStatusText = (status) => {
+        switch(status) {
+          case 'pending': return 'Chờ xử lý';
+          case 'processing': return 'Đóng gói';
+          case 'shipped': return 'Đang giao';
+          case 'delivered': return 'Đã giao';
+          case 'cancelled': return 'Đã hủy';
+          default: return 'Chờ xử lý';
+        }
+      };
+
       const renderContent = () => {
         switch (activeTab) {
           case 'orders':
@@ -123,10 +153,10 @@
                   <div className="admin-stat-card">
                     <span className="admin-stat-label">Tổng đơn hàng</span>
                     <h3 className="admin-stat-value">{orders.length}</h3>
-                    <span className="admin-stat-sub">Tháng này</span>
+                    <span className="admin-stat-sub">Tất cả thời gian</span>
                   </div>
                   <div className="admin-stat-card">
-                    <span className="admin-stat-label">Đơn mới hôm nay</span>
+                    <span className="admin-stat-label">Đơn mới</span>
                     <h3 className="admin-stat-value blue">{newOrders.length}</h3>
                     <span className="admin-stat-sub">Cần xử lý</span>
                   </div>
@@ -142,12 +172,6 @@
                   </div>
                 </div>
 
-                <div className="admin-tabs">
-                  <button className="admin-tab active">Tất cả</button>
-                  <button className="admin-tab">Mới</button>
-                  <button className="admin-tab">Đang xử lý</button>
-                </div>
-
                 <div className="admin-table-wrapper">
                   <table className="admin-table">
                     <thead>
@@ -155,29 +179,31 @@
                         <th>Mã đơn</th>
                         <th>Khách hàng</th>
                         <th>Sản phẩm</th>
+                        <th>Trạng thái</th>
                         <th>Tổng tiền</th>
                       </tr>
                     </thead>
                     <tbody>
                       {loading ? (
-                        <tr><td colSpan="4" style={{textAlign:'center', padding:'40px'}}><div className="loading-spinner"></div></td></tr>
+                        <tr><td colSpan="5" style={{textAlign:'center', padding:'40px'}}><div className="loading-spinner"></div></td></tr>
                       ) : orders.length === 0 ? (
-                        <tr><td colSpan="4"><div className="empty-state">Không có đơn hàng nào.</div></td></tr>
+                        <tr><td colSpan="5"><div className="empty-state">Không có đơn hàng nào.</div></td></tr>
                       ) : (
                         orders.map(o => {
                           let itemsText = "Sản phẩm";
                           try {
                             const items = Array.isArray(o.items) ? o.items : JSON.parse(o.items || "[]");
                             if (items.length > 0) {
-                              itemsText = items.map(i => `${i.name} ×1`).join(", ");
+                              itemsText = items.map(i => `${i.name}`).join(", ");
                             }
                           } catch (e) {}
 
                           return (
-                            <tr key={o.documentId || o.id}>
+                            <tr key={o.documentId || o.id} onClick={() => setSelectedOrder(o)}>
                               <td className="admin-td-order">#{o.id || o.documentId?.substring(0,4)}</td>
-                              <td className="admin-td-customer">{o.customerName}<br/><span style={{fontSize:'12px', color:'var(--admin-text-muted)'}}>{o.city}</span></td>
-                              <td className="admin-td-items">{itemsText}</td>
+                              <td className="admin-td-customer">{o.customerName}<br/><span style={{fontSize:'12px', color:'var(--text-muted)'}}>{o.city}</span></td>
+                              <td className="admin-td-items" style={{maxWidth:'240px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{itemsText}</td>
+                              <td><span className={`admin-badge badge-${o.status || 'pending'}`}>{getStatusText(o.status)}</span></td>
                               <td className="admin-td-total">{(o.total || 0).toLocaleString()} ₫</td>
                             </tr>
                           );
@@ -282,6 +308,67 @@
               {renderContent()}
             </div>
           </div>
+
+          {/* ORDER SLIDE-OVER */}
+          {selectedOrder && (
+            <div className="admin-slide-overlay" onClick={() => setSelectedOrder(null)}>
+              <div className="admin-slide-pane" onClick={e => e.stopPropagation()}>
+                <div className="admin-slide-header">
+                  <h2 className="admin-slide-title">Đơn hàng #{selectedOrder.id || selectedOrder.documentId?.substring(0,4)}</h2>
+                  <button className="admin-slide-close" onClick={() => setSelectedOrder(null)}>×</button>
+                </div>
+                <div className="admin-slide-body">
+                  <div className="admin-detail-section">
+                    <div className="admin-detail-label">Khách hàng</div>
+                    <div className="admin-detail-text" style={{fontWeight:500}}>{selectedOrder.customerName}</div>
+                    <div className="admin-detail-text">{selectedOrder.email}</div>
+                    <div className="admin-detail-text">{selectedOrder.phone}</div>
+                  </div>
+                  <div className="admin-detail-section">
+                    <div className="admin-detail-label">Giao hàng</div>
+                    <div className="admin-detail-text">{selectedOrder.address}</div>
+                    <div className="admin-detail-text">{selectedOrder.city}</div>
+                    <div className="admin-detail-text" style={{marginTop:'8px', color:'var(--text-muted)'}}>
+                      Hình thức: {selectedOrder.shippingMethod === 'express' ? 'Giao hàng hỏa tốc' : (selectedOrder.shippingMethod === 'standard' ? 'Giao hàng tiêu chuẩn' : 'COD')}
+                    </div>
+                  </div>
+                  <div className="admin-detail-section">
+                    <div className="admin-detail-label">Sản phẩm</div>
+                    {(() => {
+                      let items = [];
+                      try { items = Array.isArray(selectedOrder.items) ? selectedOrder.items : JSON.parse(selectedOrder.items || "[]"); } catch(e){}
+                      if (items.length === 0) return <div className="admin-detail-text" style={{fontStyle:'italic', color:'var(--text-muted)'}}>Chưa có thông tin sản phẩm.</div>;
+                      return items.map((itm, idx) => (
+                        <div key={idx} className="admin-cart-item">
+                          <span className="admin-cart-name">{itm.name} <span style={{color:'var(--text-muted)'}}>×1</span></span>
+                          <span className="admin-cart-price">{(itm.price || 0).toLocaleString()} ₫</span>
+                        </div>
+                      ));
+                    })()}
+                    <div style={{display:'flex', justifyContent:'space-between', marginTop:'16px', borderTop:'1px solid var(--border-color)', paddingTop:'16px'}}>
+                      <span style={{fontWeight:600, fontSize:'16px', color:'var(--text-main)'}}>Tổng tiền</span>
+                      <span style={{fontWeight:500, fontSize:'20px', fontFamily:'var(--font-serif)', color:'var(--text-main)'}}>{(selectedOrder.total || 0).toLocaleString()} ₫</span>
+                    </div>
+                  </div>
+                  <div className="admin-detail-section">
+                    <div className="admin-detail-label">Cập nhật trạng thái</div>
+                    <select 
+                      className="admin-status-select" 
+                      value={selectedOrder.status || 'pending'} 
+                      onChange={(e) => handleUpdateStatus(selectedOrder, e.target.value)}
+                    >
+                      <option value="pending">Chờ xử lý</option>
+                      <option value="processing">Đang đóng gói</option>
+                      <option value="shipped">Đang giao</option>
+                      <option value="delivered">Đã giao thành công</option>
+                      <option value="cancelled">Đã hủy</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       );
     }
