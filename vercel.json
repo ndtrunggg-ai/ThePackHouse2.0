@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/proxy/(.*)",
+      "destination": "https://whimsical-renewal-84c9832818.strapiapp.com/$1"
+    }
+  ]
+}

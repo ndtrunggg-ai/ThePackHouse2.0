@@ -1,7 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
+app.use(cors());
+
+// Proxy requests to Strapi Cloud to bypass CORS for the Admin Panel
+app.use('/proxy', createProxyMiddleware({ 
+  target: 'https://whimsical-renewal-84c9832818.strapiapp.com', 
+  changeOrigin: true,
+  pathRewrite: { '^/proxy': '' }
+}));
+
 app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 4000;
@@ -19,6 +30,10 @@ async function sendZaloNotification(order) {
   console.log(`[Zalo OA API] Sending Zalo message for Order ID: ${order.id} to phone ${order.phone}`);
   // Implementation would call Zalo OA API
 }
+
+app.get('/', (req, res) => {
+  res.send('Notification Middleware is running! Webhook listener is active at POST /webhook');
+});
 
 app.post('/webhook', async (req, res) => {
   const payload = req.body;
