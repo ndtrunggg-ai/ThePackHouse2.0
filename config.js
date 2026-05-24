@@ -1,5 +1,7 @@
 // Configuration for The Pack House Frontend
 window.ENV = {
-  // Replace this with your Strapi Cloud URL when deploying (e.g., 'https://your-app.strapi.app')
-  API_URL: 'https://whimsical-renewal-84c9832818.strapiapp.com'
+  // Use proxy to completely avoid CORS errors on both local and Vercel environments
+  API_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:4000/proxy' 
+    : '/proxy'
 };

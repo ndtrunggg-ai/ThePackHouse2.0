@@ -436,7 +436,7 @@
     };
 
     try {
-      await fetch('http://localhost:1337/api/orders', {
+      await fetch(`${window.ENV.API_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)
