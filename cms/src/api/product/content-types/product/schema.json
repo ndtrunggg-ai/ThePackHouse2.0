@@ -22,7 +22,7 @@
     },
     "brand": {
       "type": "enumeration",
-      "enum": ["thule", "case-logic", "alpaka", "bamkel"],
+      "enum": ["thule", "case-logic", "alpaka", "bamkel", "point-65"],
       "required": true
     },
     "type": {
