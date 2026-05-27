@@ -2,6 +2,7 @@ const BRANDS = [
   { id: "all",        name: "all",         cls: "" },
   { id: "thule",      name: "THULE",       cls: "thule-glyph", origin: "Sweden · 1942" },
   { id: "case-logic", name: "CASE LOGIC",  cls: "cl-glyph",    origin: "USA · 1984" },
+  { id: "point-65",   name: "POINT 65 NORTH", cls: "point65-glyph", origin: "Sweden · 1996" },
 ];
 
 function BrandTabs({ selected, onSelect, lang }) {

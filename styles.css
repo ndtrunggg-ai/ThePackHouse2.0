@@ -250,6 +250,7 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
 .tph-strip-brand { font-size: 14px; color: var(--ph-cocoa-700); }
 .thule-glyph { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.32em; }
 .cl-glyph    { font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: 0.28em; }
+.point65-glyph { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.28em; }
 .alpaka-glyph { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; }
 .bamkel-glyph { font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; }
 
@@ -367,6 +368,10 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
 
 .tph-card-tumi .tph-card-img { background: linear-gradient(180deg, #2A1F0E 0%, #111009 100%); }
 .tumi-brand-text { color: #E8DCC8; }
+
+.tph-card-point-65 .tph-card-img { background: linear-gradient(180deg, #1C1E20 0%, #0F1012 100%); }
+.tph-card-point-65 .tph-card-brand { color: #E0E2E5; }
+.tph-card-point-65 .tph-card-flag { color: rgba(224,226,229,0.65); }
 
 /* ===== STORE INFO ===== */
 .tph-section-store { background: var(--ph-cream-50);

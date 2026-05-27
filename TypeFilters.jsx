@@ -3,7 +3,7 @@ const TYPES = [
   { id: "backpacks",   name: "Balo" },
   { id: "duffel",      name: "Túi xách (Duffel)" },
   { id: "luggage",     name: "Vali" },
-  { id: "daypacks",    name: "Balo dạo phố" },
+  { id: "daypacks",    name: "Balo Mô Tô" },
   { id: "laptop-bags", name: "Túi laptop" },
   { id: "accessory",   name: "Phụ kiện" },
 ];
@@ -14,9 +14,9 @@ function TypeFilters({ selected, onSelect, resultCount, sort, onSort, lang }) {
   const TYPE_NAMES = {
     "all": isEn ? "All products" : "Tất cả sản phẩm",
     "backpacks": isEn ? "Backpacks" : "Balo",
-    "duffel": isEn ? "Duffel" : "Túi xách (Duffel)",
+    "duffel": isEn ? "Duffel" : "Túi xách/ túi du lịch",
     "luggage": isEn ? "Luggage" : "Vali",
-    "daypacks": isEn ? "Daypacks" : "Balo dạo phố",
+    "daypacks": isEn ? "Motorbike Backpacks" : "Balo Mô Tô",
     "laptop-bags": isEn ? "Laptop bags" : "Túi laptop",
     "accessory": isEn ? "Accessories" : "Phụ kiện"
   };

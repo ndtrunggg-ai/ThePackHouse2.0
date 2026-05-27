@@ -72,14 +72,23 @@
           .then(data => {
             // Strapi v5 returns flat objects, no need to extract .attributes
             const normalized = data.data.map(p => {
-              // Override Tote bag type from luggage to duffel dynamically
+              // Frontend overrides for missing data in CMS
               let overrideType = p.type;
-              if (p.name && p.name.toLowerCase().includes('tote')) {
+              let overrideBrand = p.brand;
+              const nameLower = (p.name || '').toLowerCase();
+              if (nameLower.includes('tote') || nameLower.includes('spira vertical') || nameLower.includes('crossover 44l')) {
                 overrideType = 'duffel';
+              }
+              if (nameLower.includes('mt carrier 5l') || nameLower.includes('point 65')) {
+                overrideBrand = 'point-65';
+              }
+              if (nameLower.includes('gtx 25l') || nameLower.includes('gtx 20l')) {
+                overrideType = 'daypacks';
               }
               return {
                 ...p,
                 type: overrideType,
+                brand: overrideBrand,
                 price: parseInt(p.price, 10) || 0,
                 original_price: p.original_price ? (parseInt(p.original_price, 10) || 0) : undefined
               };
@@ -87,6 +96,13 @@
             setProducts(normalized);
           })
           .catch(err => console.error('Failed to load products from CMS:', err));
+
+        const handleFilter = (e) => {
+          if (e.detail.brand) setBrand(e.detail.brand);
+          if (e.detail.type) setType(e.detail.type);
+        };
+        window.addEventListener('tph-filter', handleFilter);
+        return () => window.removeEventListener('tph-filter', handleFilter);
       }, []);
 
       const getFirstImage = (p) => {

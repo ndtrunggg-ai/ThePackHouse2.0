@@ -29,8 +29,10 @@ function Footer({ lang }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const scrollToShop = (e) => {
+  const scrollToShop = (e, type, brand) => {
     e.preventDefault();
+    if (type) window.dispatchEvent(new CustomEvent('tph-filter', { detail: { type } }));
+    if (brand) window.dispatchEvent(new CustomEvent('tph-filter', { detail: { brand } }));
     const el = document.getElementById('shop');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -107,18 +109,19 @@ function Footer({ lang }) {
           {/* Shop */}
           <div>
             <div className="tph-footer-h">{t.shop}</div>
-            <a style={linkStyle} onClick={scrollToShop}>{t.backpack}</a>
-            <a style={linkStyle} onClick={scrollToShop}>{t.luggage}</a>
-            <a style={linkStyle} onClick={scrollToShop}>{t.duffel}</a>
-            <a style={linkStyle} onClick={scrollToShop}>{t.laptop}</a>
-            <a style={linkStyle} onClick={scrollToShop}>{t.accessory}</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'backpacks')}>{t.backpack}</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'luggage')}>{t.luggage}</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'duffel')}>{t.duffel}</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'laptop-bags')}>{t.laptop}</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'accessory')}>{t.accessory}</a>
           </div>
 
           {/* Brands */}
           <div>
             <div className="tph-footer-h">{t.brands}</div>
-            <a style={linkStyle} onClick={scrollToShop}>Thule</a>
-            <a style={linkStyle} onClick={scrollToShop}>Case Logic</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, null, 'thule')}>Thule</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, null, 'case-logic')}>Case Logic</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, null, 'point-65')}>Point 65 North</a>
           </div>
 
           {/* Support */}
