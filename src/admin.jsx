@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-  ? 'http://localhost:4000/proxy' 
-  : '/proxy';
+const API_URL = window.ENV?.API_URL || 'https://whimsical-renewal-84c9832818.strapiapp.com';
 
 function AdminApp() {
   const [token, setToken] = React.useState(localStorage.getItem("admin_token"));

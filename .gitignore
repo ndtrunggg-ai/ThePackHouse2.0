@@ -21,3 +21,4 @@ fix-db.js
 # Environment files
 .env
 .env.*
+dist/
