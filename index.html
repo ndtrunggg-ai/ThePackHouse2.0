@@ -5,13 +5,22 @@
   <title>The Pack House — Carry your home, anywhere.</title>
   <meta name="description" content="The Pack House chuyên cung cấp balo, vali, túi xách chính hãng từ các thương hiệu hàng đầu thế giới như Thule, Case Logic, Point 65 North và các thương hiệu cao cấp khác. Mang ngôi nhà của bạn đi khắp muôn nơi." />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Preconnect hints for critical origins -->
+  <link rel="preconnect" href="https://whimsical-renewal-84c9832818.strapiapp.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://maps.gstatic.com" />
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" />
+
   <link rel="stylesheet" href="/styles.css" />
   <link rel="stylesheet" href="/colors_and_type.css" />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
 </head>
 <body>
   <div id="root"></div>
-  <script src="/config.js"></script>
+  <script src="/config.js" defer></script>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
