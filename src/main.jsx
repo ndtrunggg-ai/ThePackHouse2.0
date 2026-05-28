@@ -7,6 +7,7 @@ import TypeFilters from './TypeFilters';
 import ProductGrid from './ProductGrid';
 import ProductModal from './ProductModal';
 import StoreInfo from './StoreInfo';
+import Faq from './Faq';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
 
@@ -180,6 +181,8 @@ function App() {
       </section>
 
       <StoreInfo lang={lang} />
+      
+      <Faq lang={lang} />
 
       <Footer lang={lang} />
 

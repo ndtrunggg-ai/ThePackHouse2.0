@@ -154,6 +154,16 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
 .tph-journal-meta { font-family: var(--font-sans); font-size: 11px;
   letter-spacing: 0.18em; text-transform: uppercase; color: var(--ph-sand-500); }
 
+/* ===== FAQ ===== */
+.tph-faq { background: #FFFCF6; border-top: 0.5px solid var(--ph-sand-300); padding: 80px 48px; }
+.tph-faq-inner { max-width: 800px; margin: 0 auto; }
+.tph-faq-title { font-family: var(--font-serif); font-weight: 300; font-size: 36px; line-height: 1.1; color: var(--ph-cocoa-850); margin: 0 0 48px; text-align: center; }
+.tph-faq-list { display: flex; flex-direction: column; gap: 24px; }
+.tph-faq-item { padding-bottom: 24px; border-bottom: 0.5px solid var(--ph-sand-300); }
+.tph-faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+.tph-faq-q { font-family: var(--font-serif); font-weight: 400; font-size: 20px; color: var(--ph-cocoa-850); margin: 0 0 10px; }
+.tph-faq-a { font-family: var(--font-sans); font-size: 15px; line-height: 1.6; color: var(--ph-cocoa-700); margin: 0; }
+
 /* ===== FOOTER ===== */
 .tph-footer { background: var(--ph-ink-950); color: var(--ph-cream-200); padding: 80px 48px 28px; }
 .tph-footer-top { display: grid; grid-template-columns: 1fr 2.5fr; gap: 64px; max-width: 1320px;
@@ -480,6 +490,11 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
   
   .tph-visit { grid-template-columns: 1fr; padding: 32px; gap: 32px; }
   .tph-visit-map { aspect-ratio: 16/9; }
+
+  /* FAQ */
+  .tph-faq { padding: 48px 24px; }
+  .tph-faq-title { font-size: 28px; margin-bottom: 32px; }
+  .tph-faq-q { font-size: 18px; }
 
   /* Footer */
   .tph-footer { padding: 48px 24px 24px; }
