@@ -36,32 +36,34 @@ function App() {
 
   const [lang, setLang] = React.useState("vi");
   const [selectedProduct, setSelectedProduct] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
 
-  React.useEffect(() => {
-    fetch(`${window.ENV.API_URL}/api/products?populate=*&pagination[pageSize]=100`)
-      .then(res => res.json())
-      .then(data => {
-        // Strapi v5 returns flat objects, no need to extract .attributes
+  const fetchProducts = React.useCallback(async (retries = 3) => {
+    setLoading(true);
+    setError(null);
+    for (let i = 0; i < retries; i++) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+        
+        const res = await fetch(`${window.ENV.API_URL}/api/products?populate=*&pagination[pageSize]=100`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        
+        const data = await res.json();
         const normalized = data.data.map(p => {
-          // Frontend overrides for missing data in CMS
           let overrideType = p.type;
           let overrideBrand = p.brand;
           const nameLower = (p.name || '').toLowerCase();
-          if (nameLower.includes('tote') || nameLower.includes('spira vertical') || nameLower.includes('crossover 44l')) {
-            overrideType = 'duffel';
-          }
-          if (nameLower.includes('mt carrier 5l') || nameLower.includes('point 65')) {
-            overrideBrand = 'point-65';
-          }
-          if (nameLower.includes('gtx 25l') || nameLower.includes('gtx 20l')) {
-            overrideType = 'daypacks';
-          }
-          if (nameLower.includes('chéo') || nameLower.includes('bao tử') || nameLower.includes('sling') || nameLower.includes('crossbody')) {
-            overrideType = 'sling';
-          }
-          if (nameLower.includes('máy ảnh') || nameLower.includes('camera')) {
-            overrideType = 'camera';
-          }
+          if (nameLower.includes('tote') || nameLower.includes('spira vertical') || nameLower.includes('crossover 44l')) overrideType = 'duffel';
+          if (nameLower.includes('mt carrier 5l') || nameLower.includes('point 65')) overrideBrand = 'point-65';
+          if (nameLower.includes('gtx 25l') || nameLower.includes('gtx 20l')) overrideType = 'daypacks';
+          if (nameLower.includes('chéo') || nameLower.includes('bao tử') || nameLower.includes('sling') || nameLower.includes('crossbody')) overrideType = 'sling';
+          if (nameLower.includes('máy ảnh') || nameLower.includes('camera')) overrideType = 'camera';
           return {
             ...p,
             type: overrideType,
@@ -70,9 +72,22 @@ function App() {
             original_price: p.original_price ? (parseInt(p.original_price, 10) || 0) : undefined
           };
         });
+        
         setProducts(normalized);
-      })
-      .catch(err => console.error('Failed to load products from CMS:', err));
+        setLoading(false);
+        return; // Success, exit loop
+      } catch (err) {
+        console.warn(`Fetch attempt ${i + 1} failed:`, err);
+        if (i === retries - 1) {
+          setError(err.name === 'AbortError' ? 'timeout' : 'network');
+          setLoading(false);
+        }
+      }
+    }
+  }, []);
+
+  React.useEffect(() => {
+    fetchProducts();
 
     const handleFilter = (e) => {
       if (e.detail.brand) setBrand(e.detail.brand);
@@ -157,6 +172,9 @@ function App() {
           onAdd={handleAdd}
           onView={setSelectedProduct}
           onClearFilters={handleClear}
+          loading={loading}
+          error={error}
+          onRetry={() => fetchProducts()}
           lang={lang}
         />
       </section>

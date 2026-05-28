@@ -109,15 +109,41 @@ function ProductCard({ p, onAdd, onView, lang, lazy = true }) {
   );
 }
 
-function ProductGrid({ brand, type, search, sort, onAdd, onView, onClearFilters, products = [], lang }) {
+function ProductGrid({ brand, type, search, sort, onAdd, onView, onClearFilters, products = [], lang, loading, error, onRetry }) {
   const isEn = lang === 'en';
   const t = {
     emptyHead: isEn ? "Nothing found." : "Chưa có sản phẩm phù hợp.",
     emptyBody: isEn ? "Try adjusting your filters." : "Thử tìm với thương hiệu hoặc phân loại khác.",
     clearBtn: isEn ? "Clear filters" : "Xóa bộ lọc",
-    addNew: isEn ? "Add New Product" : "Thêm sản phẩm mới",
-    addDesc: isEn ? "Update via Admin" : "Cập nhật từ Admin"
+    loadingHead: isEn ? "Loading products..." : "Đang tải dữ liệu sản phẩm...",
+    loadingBody: isEn ? "Please wait a moment while we fetch the latest catalog." : "Vui lòng chờ trong giây lát...",
+    errorHead: isEn ? "Connection Error" : "Lỗi kết nối",
+    errorBody: isEn ? "Failed to connect to the database." : "Không thể tải dữ liệu. Vui lòng kiểm tra kết nối của bạn.",
+    retryBtn: isEn ? "Retry" : "Thử lại"
   };
+
+  if (loading) {
+    return (
+      <div className="tph-empty" style={{ minHeight: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ margin: '0 auto 24px', width: '32px', height: '32px', border: '3px solid var(--ph-sand-300)', borderTopColor: 'var(--ph-cocoa-850)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}>
+          <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+        </div>
+        <h3 style={{ marginBottom: '8px' }}>{t.loadingHead}</h3>
+        <p>{t.loadingBody}</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="tph-empty" style={{ minHeight: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div className="tph-empty-mark">⚠</div>
+        <h3 style={{ marginBottom: '8px' }}>{t.errorHead}</h3>
+        <p>{t.errorBody}</p>
+        <button className="tph-btn tph-btn-primary" onClick={onRetry} style={{ maxWidth: '200px', margin: '16px auto 0' }}>{t.retryBtn}</button>
+      </div>
+    );
+  }
 
   let list = products.filter((p) => {
     if (brand !== "all" && p.brand !== brand) return false;
