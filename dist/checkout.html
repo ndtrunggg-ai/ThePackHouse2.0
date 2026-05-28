@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <title>Thanh Toán — The Pack House</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <script src="/config.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{background:var(--ph-cream-100);color:var(--ph-cocoa-850);font-family:var(--font-sans);margin:0}
+    .co-wrap{display:grid;grid-template-columns:1fr 420px;min-height:100vh}
+    .co-left{padding:56px 64px;border-right:0.75px solid var(--ph-sand-300)}
+    .co-right{padding:48px 40px;background:var(--ph-cream-50)}
+    .co-logo{font-family:var(--font-serif);font-weight:300;font-size:26px;letter-spacing:.06em;color:var(--ph-cocoa-850);text-decoration:none;display:block;margin-bottom:40px}
+    .co-breadcrumb{display:flex;gap:8px;align-items:center;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ph-sand-500);margin-bottom:36px}
+    .co-breadcrumb span.active{color:var(--ph-cocoa-850)}
+    .co-breadcrumb span{cursor:pointer}
+    .co-breadcrumb i{color:var(--ph-sand-300)}
+    .co-section-title{font-family:var(--font-serif);font-weight:300;font-size:22px;color:var(--ph-cocoa-850);margin:0 0 18px}
+    .co-field{width:100%;border:0.75px solid var(--ph-sand-300);border-radius:2px;padding:13px 14px;font-family:var(--font-sans);font-size:14px;color:var(--ph-cocoa-850);background:var(--ph-cream-100);outline:none;transition:border-color 180ms;margin-bottom:12px}
+    .co-field:focus{border-color:var(--ph-cocoa-850)}
+    .co-field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .co-check-row{display:flex;align-items:center;gap:10px;margin:8px 0 18px;font-size:13px;color:var(--ph-cocoa-700)}
+    .co-check-row input{accent-color:var(--ph-cocoa-850)}
+    .co-section{margin-bottom:36px}
+    .co-divider{height:0.5px;background:var(--ph-sand-300);margin:28px 0}
+
+    /* Payment options */
+    .co-pay-opt{border:0.75px solid var(--ph-sand-300);border-radius:3px;overflow:hidden;margin-bottom:12px;transition:border-color 200ms}
+    .co-pay-opt.selected{border-color:var(--ph-cocoa-850)}
+    .co-pay-header{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;background:var(--ph-cream-100)}
+    .co-pay-header input[type=radio]{accent-color:var(--ph-cocoa-850);width:16px;height:16px;flex-shrink:0}
+    .co-pay-label{flex:1;font-size:14px;font-weight:500;color:var(--ph-cocoa-850)}
+    .co-pay-logo{height:24px;width:auto;object-fit:contain}
+    .co-pay-logo-text{font-size:13px;font-weight:700;color:#0068ff;letter-spacing:.02em}
+    .co-pay-body{padding:0 18px 16px;font-size:13px;color:var(--ph-sand-500);border-top:0.5px solid var(--ph-sand-200);background:var(--ph-cream-50)}
+    .co-pay-body p{margin:12px 0 0}
+
+    .co-ship-opt{border:0.75px solid var(--ph-sand-300);border-radius:3px;margin-bottom:10px;cursor:pointer;overflow:hidden;transition:border-color 200ms}
+    .co-ship-opt.selected{border-color:var(--ph-cocoa-850);background:var(--ph-cream-50)}
+    .co-ship-header{display:flex;align-items:center;gap:14px;padding:14px 18px}
+    .co-ship-header input[type=radio]{accent-color:var(--ph-cocoa-850);width:16px;height:16px;flex-shrink:0}
+    .co-ship-info{flex:1}
+    .co-ship-name{font-size:14px;font-weight:500;color:var(--ph-cocoa-850)}
+    .co-ship-desc{font-size:12px;color:var(--ph-sand-500);margin-top:2px}
+    .co-ship-price{font-family:var(--font-serif);font-size:16px;color:var(--ph-cocoa-850)}
+
+    .co-submit{width:100%;padding:17px;background:var(--ph-cocoa-850);color:var(--ph-cream-200);border:none;border-radius:2px;font-family:var(--font-sans);font-size:12px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:background 200ms;margin-top:24px}
+    .co-submit:hover:not(:disabled){background:var(--ph-cocoa-700)}
+    .co-submit:disabled{opacity:.4;cursor:not-allowed}
+
+    /* Right panel */
+    .co-items{margin-bottom:24px}
+    .co-item{display:grid;grid-template-columns:64px 1fr auto;gap:14px;padding:16px 0;border-bottom:0.5px solid var(--ph-sand-300);align-items:center}
+    .co-item-img{width:64px;height:80px;border-radius:2px;background:#F5F3EF;object-fit:contain;position:relative}
+    .co-item-img img{width:100%;height:100%;object-fit:contain;border-radius:2px}
+    .co-item-img .co-item-qty{position:absolute;top:-8px;right:-8px;background:var(--ph-cocoa-850);color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:600}
+    .co-item-name{font-family:var(--font-serif);font-size:15px;color:var(--ph-cocoa-850);margin-bottom:4px}
+    .co-item-meta{font-size:11px;color:var(--ph-sand-500)}
+    .co-item-price{font-family:var(--font-serif);font-size:16px;color:var(--ph-cocoa-850)}
+    .co-totals{border-top:0.5px solid var(--ph-sand-300);padding-top:18px}
+    .co-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;font-size:13px;color:var(--ph-cocoa-700)}
+    .co-total-row.grand{font-size:16px;color:var(--ph-cocoa-850);font-weight:500;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--ph-sand-300)}
+    .co-total-row.grand .val{font-family:var(--font-serif);font-size:24px;font-weight:300}
+    .co-coupon{display:flex;gap:8px;margin:20px 0}
+    .co-coupon input{flex:1;border:0.75px solid var(--ph-sand-300);border-radius:2px;padding:10px 12px;font-size:13px;outline:none;background:var(--ph-cream-100);font-family:var(--font-sans);color:var(--ph-cocoa-850)}
+    .co-coupon input:focus{border-color:var(--ph-cocoa-850)}
+    .co-coupon button{padding:10px 16px;background:transparent;border:0.75px solid var(--ph-cocoa-850);border-radius:2px;font-family:var(--font-sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;color:var(--ph-cocoa-850);transition:all 180ms}
+    .co-coupon button:hover{background:var(--ph-cocoa-850);color:#fff}
+
+    .co-alert{padding:12px 16px;border-radius:3px;font-size:13px;margin-bottom:18px;display:none}
+    .co-alert.success{background:#e8f5e9;color:#2e7d32;display:block}
+    .co-alert.error{background:#fdecea;color:#c62828;display:block}
+
+    .zp-loading{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Top bar */
+    .co-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px}
+    .co-back{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ph-sand-500);text-decoration:none;cursor:pointer;transition:color 180ms;border:none;background:transparent;padding:0;font-family:var(--font-sans)}
+    .co-back:hover{color:var(--ph-bronze-500)}
+    .co-back svg{width:14px;height:14px}
+    .co-logo-inline{font-family:var(--font-serif);font-weight:300;font-size:24px;letter-spacing:.06em;color:var(--ph-cocoa-850);text-decoration:none}
+    .co-topbar-right{display:flex;align-items:center;gap:14px}
+    .co-help-btn{background:transparent;border:0.75px solid var(--ph-sand-300);border-radius:2px;padding:7px 14px;font-family:var(--font-sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ph-cocoa-850);cursor:pointer;transition:all 180ms}
+    .co-help-btn:hover{border-color:var(--ph-cocoa-850);background:var(--ph-cream-50)}
+    .co-lang-btn{background:transparent;border:none;font-family:var(--font-sans);font-size:11px;font-weight:500;color:var(--ph-sand-500);cursor:pointer;padding:0;transition:color 180ms;letter-spacing:.1em}
+    .co-lang-btn:hover,.co-lang-btn.active{color:var(--ph-bronze-500)}
+    .co-lang-sep{color:var(--ph-sand-300);margin:0 2px}
+
+    /* Support popup */
+    .co-popup-overlay{position:fixed;inset:0;z-index:200;display:none}
+    .co-popup-overlay.open{display:block}
+    .co-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--ph-cream-100);border:0.75px solid var(--ph-sand-300);border-radius:4px;padding:40px 44px;z-index:201;min-width:340px;box-shadow:0 24px 64px -16px rgba(42,31,14,.22)}
+    .co-popup-close{position:absolute;top:14px;right:14px;background:transparent;border:none;cursor:pointer;color:var(--ph-sand-500);font-size:20px;line-height:1;transition:color 180ms}
+    .co-popup-close:hover{color:var(--ph-cocoa-850)}
+    .co-popup-title{font-family:var(--font-serif);font-weight:300;font-size:26px;margin:0 0 24px;color:var(--ph-cocoa-850)}
+    .co-popup-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:14px;color:var(--ph-cocoa-850)}
+    .co-popup-row a{color:var(--ph-bronze-500);text-decoration:none}
+    .co-popup-row a:hover{text-decoration:underline}
+    .co-popup-icon{font-size:18px;width:28px;text-align:center}
+    .co-popup-hours{margin-top:20px;padding-top:20px;border-top:0.5px solid var(--ph-sand-300);font-size:13px;color:var(--ph-sand-500)}
+
+    @media(max-width:900px){
+      .co-wrap{grid-template-columns:1fr}
+      .co-right{border-top:0.75px solid var(--ph-sand-300)}
+      .co-left{padding:32px 24px}
+      .co-right{padding:32px 24px}
+    }
+  </style>
+  <link rel="stylesheet" crossorigin href="/assets/checkout-xUdrIi59.css">
+</head>
+<body>
+<div class="co-wrap">
+  <!-- Support popup -->
+  <div class="co-popup-overlay" id="support-overlay" onclick="closeSupportPopup(event)">
+    <div class="co-popup">
+      <button class="co-popup-close" onclick="document.getElementById('support-overlay').classList.remove('open')">✕</button>
+      <div class="co-popup-title" id="popup-title">Hỗ trợ</div>
+      <div class="co-popup-row"><span class="co-popup-icon">📞</span><span id="popup-phone">Hotline: <a href="tel:0981228826">0981 228 826</a></span></div>
+      <div class="co-popup-row"><span class="co-popup-icon">✉️</span><span id="popup-email">Email: <a href="mailto:thepackhouse.vn@gmail.com">thepackhouse.vn@gmail.com</a></span></div>
+      <div class="co-popup-hours" id="popup-hours">Giờ làm việc: 8:30 – 18:00 hàng ngày<br>17 Ngõ 2 Phố Quần Ngựa, Phường Ngọc Hà, Hà Nội</div>
+    </div>
+  </div>
+
+  <!-- LEFT: Form -->
+  <div class="co-left">
+    <div class="co-topbar">
+      <button class="co-back" onclick="history.back()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        <span id="back-label">Quay lại</span>
+      </button>
+      <a href="index.html" class="co-logo-inline">The Pack House</a>
+      <div class="co-topbar-right">
+        <button class="co-lang-btn active" id="lang-vi" onclick="setLang('vi')">VI</button>
+        <span class="co-lang-sep">|</span>
+        <button class="co-lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
+        <button class="co-help-btn" onclick="document.getElementById('support-overlay').classList.add('open')" id="help-btn">Hỗ trợ</button>
+      </div>
+    </div>
+
+    <div class="co-breadcrumb">
+      <span onclick="location.href='index.html'">Giỏ hàng</span>
+      <i>›</i>
+      <span class="active">Thông tin</span>
+      <i>›</i>
+      <span>Thanh toán</span>
+    </div>
+
+    <div id="co-alert" class="co-alert"></div>
+
+    <!-- Contact -->
+    <div class="co-section">
+      <h2 class="co-section-title">Thông tin liên hệ</h2>
+      <input id="co-email" class="co-field" type="text" placeholder="Email hoặc số điện thoại"/>
+    </div>
+
+    <!-- Delivery -->
+    <div class="co-section">
+      <h2 class="co-section-title">Địa chỉ giao hàng</h2>
+      <select id="co-country" class="co-field">
+        <option value="VN" selected>Việt Nam</option>
+      </select>
+      <div class="co-field-row">
+        <input id="co-first" class="co-field" placeholder="Họ" style="margin-bottom:0"/>
+        <input id="co-last" class="co-field" placeholder="Tên" style="margin-bottom:0"/>
+      </div>
+      <div style="height:12px"></div>
+      <input id="co-address" class="co-field" placeholder="Địa chỉ"/>
+      <input id="co-apt" class="co-field" placeholder="Căn hộ, tầng, v.v. (tuỳ chọn)"/>
+      <div class="co-field-row">
+        <input id="co-city" class="co-field" placeholder="Thành phố" style="margin-bottom:0"/>
+        <input id="co-zip" class="co-field" placeholder="Mã bưu chính (tuỳ chọn)" style="margin-bottom:0"/>
+      </div>
+      <div style="height:12px"></div>
+      <input id="co-phone" class="co-field" placeholder="Số điện thoại"/>
+      <div class="co-check-row">
+        <input type="checkbox" id="co-save"/>
+        <label for="co-save">Lưu thông tin cho lần mua sau</label>
+      </div>
+    </div>
+
+    <!-- Shipping method -->
+    <div class="co-section">
+      <h2 class="co-section-title">Phương thức vận chuyển</h2>
+      <div class="co-ship-opt selected" onclick="selectShip(this,'standard')">
+        <div class="co-ship-header">
+          <input type="radio" name="shipping" value="standard" checked/>
+          <div class="co-ship-info">
+            <div class="co-ship-name">Tiêu chuẩn</div>
+            <div class="co-ship-desc">3–5 ngày làm việc</div>
+          </div>
+          <div class="co-ship-price">Miễn phí</div>
+        </div>
+      </div>
+      <div class="co-ship-opt" onclick="selectShip(this,'express')">
+        <div class="co-ship-header">
+          <input type="radio" name="shipping" value="express"/>
+          <div class="co-ship-info">
+            <div class="co-ship-name">Nhanh</div>
+            <div class="co-ship-desc">1–2 ngày làm việc</div>
+            <div class="co-ship-desc" id="express-note" style="color:var(--ph-cocoa-850);margin-top:4px">Nhân viên sẽ liên hệ thông báo phí giao hàng cụ thể.</div>
+          </div>
+          <div class="co-ship-price" id="express-price" style="font-size:14px">50.000 - 100.000 ₫</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="co-section">
+      <h2 class="co-section-title">Thanh toán</h2>
+      <p class="co-secure" style="font-size:13px;color:var(--ph-sand-500);margin:0 0 18px">🔒 Mọi giao dịch đều được mã hóa và bảo mật.</p>
+
+      <!-- ZaloPay -->
+      <div class="co-pay-opt selected" id="opt-zalopay" onclick="selectPay('zalopay')">
+        <div class="co-pay-header">
+          <input type="radio" name="payment" value="zalopay" checked/>
+          <span class="co-pay-label">ZaloPay</span>
+          <span class="co-pay-logo-text">ZaloPay</span>
+        </div>
+        <div class="co-pay-body">
+          <p>Thanh toán qua Ví ZaloPay, thẻ Visa/Master/JCB hoặc thẻ ATM nội địa. Bạn sẽ được chuyển đến cổng thanh toán ZaloPay để hoàn tất giao dịch.</p>
+        </div>
+      </div>
+
+      <!-- COD -->
+      <div class="co-pay-opt" id="opt-cod" onclick="selectPay('cod')">
+        <div class="co-pay-header">
+          <input type="radio" name="payment" value="cod"/>
+          <span class="co-pay-label">Thanh toán khi nhận hàng (COD)</span>
+          <span style="font-size:20px">💵</span>
+        </div>
+        <div class="co-pay-body" style="display:none">
+          <p>Thanh toán bằng tiền mặt khi nhận hàng. Áp dụng cho các đơn hàng nội thành Hà Nội.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Billing address -->
+    <div class="co-section">
+      <h2 class="co-section-title">Địa chỉ thanh toán</h2>
+      <div class="co-ship-opt selected" onclick="selectBilling(this,'same')">
+        <div class="co-ship-header" style="padding:12px 18px">
+          <input type="radio" name="billing" value="same" checked/>
+          <div class="co-ship-info"><div class="co-ship-name">Giống địa chỉ giao hàng</div></div>
+        </div>
+      </div>
+      <div class="co-ship-opt" onclick="selectBilling(this,'different')">
+        <div class="co-ship-header" style="padding:12px 18px">
+          <input type="radio" name="billing" value="different"/>
+          <div class="co-ship-info"><div class="co-ship-name">Dùng địa chỉ khác</div></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="co-submit" id="co-btn" onclick="placeOrder()">
+      Hoàn tất đơn hàng
+    </button>
+    <p style="font-size:11px;color:var(--ph-sand-500);text-align:center;margin-top:18px">Bằng cách đặt hàng, bạn đồng ý với <a href="#" style="color:var(--ph-cocoa-850)">Điều khoản dịch vụ</a> của chúng tôi.</p>
+  </div>
+
+  <!-- RIGHT: Order summary -->
+  <div class="co-right">
+    <div style="margin-bottom:24px">
+      <div class="tph-eyebrow" style="margin-bottom:16px">Đơn hàng của bạn</div>
+      <div class="co-items" id="co-items"></div>
+    </div>
+
+    <div class="co-coupon">
+      <input id="co-coupon" placeholder="Mã giảm giá"/>
+      <button onclick="applyCoupon()">Áp dụng</button>
+    </div>
+
+    <div class="co-totals">
+      <div class="co-total-row"><span>Tạm tính</span><span id="subtotal-val">—</span></div>
+      <div class="co-total-row"><span>Phí vận chuyển</span><span id="shipping-val">Miễn phí</span></div>
+      <div class="co-total-row"><span>Giảm giá</span><span id="discount-val" style="color:#9A2A1E">—</span></div>
+      <div class="co-total-row grand">
+        <span>Tổng cộng</span>
+        <span class="val" id="total-val">—</span>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;padding-top:24px;border-top:0.5px solid var(--ph-sand-300)">
+      <div class="tph-eyebrow" data-accepted style="margin-bottom:12px;color:var(--ph-sand-500)">Được chấp nhận</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <span style="background:#0068ff;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:.04em">ZaloPay</span>
+        <span style="background:#1a1f71;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px">VISA</span>
+        <span style="background:#eb001b;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px">MasterCard</span>
+        <span style="background:#003087;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px">JCB</span>
+        <span style="background:#fff;color:#333;font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;border:1px solid #ddd">ATM</span>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;font-size:12px;color:var(--ph-sand-500);line-height:1.6">
+      <div style="margin-bottom:6px">📍 <strong style="color:var(--ph-cocoa-850)">The Pack House</strong></div>
+      <div>17 Ngõ 2 Phố Quần Ngựa, Phường Ngọc Hà, Hà Nội</div>
+      <div id="store-hours">Giờ mở cửa: 8:30 – 18:00 hàng ngày</div>
+      <div style="margin-top:6px"><a href="tel:0981228826" style="color:var(--ph-bronze-500)">0981 228 826</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var cart = [];
+  var selectedPayment = 'zalopay';
+  var selectedShipping = 'standard';
+  var shippingFee = 0;
+  var discount = 0;
+
+  // Load cart from sessionStorage
+  try {
+    var raw = sessionStorage.getItem('tph_cart');
+    if (raw) cart = JSON.parse(raw);
+  } catch(e) {}
+
+  // If no cart, add a demo item
+  if (!cart.length) {
+    cart = [{ name: 'Demo sản phẩm', color: 'thule', price: 2500000, image: null }];
+  }
+
+  function fmt(n) {
+    return Number(n).toLocaleString('vi-VN') + ' ₫';
+  }
+
+  function renderItems() {
+    var el = document.getElementById('co-items');
+    el.innerHTML = cart.map(function(it, i) {
+      return '<div class="co-item">' +
+        '<div class="co-item-img" style="position:relative">' +
+          (it.image
+            ? '<img src="' + it.image + '" alt="' + it.name + '"/>'
+            : '<div style="width:100%;height:100%;background:linear-gradient(180deg,#C8A97A,#8A7030);border-radius:2px"></div>') +
+          '<span class="co-item-qty">1</span>' +
+        '</div>' +
+        '<div><div class="co-item-name">' + it.name + '</div><div class="co-item-meta">' + (it.color || '') + '</div></div>' +
+        '<div class="co-item-price">' + fmt(it.price) + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function calcTotal() {
+    var sub = cart.reduce(function(s,i){return s+i.price},0);
+    document.getElementById('subtotal-val').textContent = fmt(sub);
+    document.getElementById('shipping-val').textContent = shippingFee ? fmt(shippingFee) : 'Miễn phí';
+    document.getElementById('discount-val').textContent = discount ? '-' + fmt(discount) : '—';
+    document.getElementById('total-val').textContent = fmt(sub + shippingFee - discount);
+    return sub + shippingFee - discount;
+  }
+
+  function selectPay(method) {
+    selectedPayment = method;
+    ['zalopay','cod'].forEach(function(m) {
+      var el = document.getElementById('opt-' + m);
+      el.classList.toggle('selected', m === method);
+      el.querySelector('input').checked = m === method;
+      var body = el.querySelector('.co-pay-body');
+      if (body) body.style.display = m === method ? 'block' : 'none';
+    });
+  }
+
+  function selectShip(el, method) {
+    selectedShipping = method;
+    shippingFee = 0; // TBD
+    document.querySelectorAll('.co-ship-opt').forEach(function(o) {
+      o.classList.remove('selected');
+      o.querySelector('input').checked = false;
+    });
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    calcTotal();
+  }
+
+  function selectBilling(el, method) {
+    document.querySelectorAll('[name=billing]').forEach(function(r){ r.checked = false; });
+    el.querySelector('input').checked = true;
+    document.querySelectorAll('.co-section:last-of-type .co-ship-opt').forEach(function(o){ o.classList.remove('selected'); });
+    el.classList.add('selected');
+  }
+
+  function applyCoupon() {
+    var code = document.getElementById('co-coupon').value.trim().toUpperCase();
+    if (code === 'PACKHOUSE10') {
+      var sub = cart.reduce(function(s,i){return s+i.price},0);
+      discount = Math.round(sub * 0.1);
+      showAlert('Áp dụng mã giảm giá thành công! Giảm 10%.', 'success');
+    } else {
+      discount = 0;
+      showAlert('Mã giảm giá không hợp lệ.', 'error');
+    }
+    calcTotal();
+  }
+
+  function showAlert(msg, type) {
+    var el = document.getElementById('co-alert');
+    el.textContent = msg;
+    el.className = 'co-alert ' + type;
+    setTimeout(function(){ el.className = 'co-alert'; }, 4000);
+  }
+
+  function validate() {
+    var email = document.getElementById('co-email').value.trim();
+    var first = document.getElementById('co-first').value.trim();
+    var last = document.getElementById('co-last').value.trim();
+    var address = document.getElementById('co-address').value.trim();
+    var city = document.getElementById('co-city').value.trim();
+    var phone = document.getElementById('co-phone').value.trim();
+    if (!email) { showAlert('Vui lòng nhập email hoặc số điện thoại.', 'error'); return false; }
+    if (!first || !last) { showAlert('Vui lòng nhập họ và tên.', 'error'); return false; }
+    if (!address) { showAlert('Vui lòng nhập địa chỉ giao hàng.', 'error'); return false; }
+    if (!city) { showAlert('Vui lòng nhập thành phố.', 'error'); return false; }
+    if (!phone) { showAlert('Vui lòng nhập số điện thoại.', 'error'); return false; }
+    return true;
+  }
+
+  async function placeOrder() {
+    if (!validate()) return;
+    var btn = document.getElementById('co-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="zp-loading"></span>Đang xử lý...';
+
+    var total = calcTotal();
+
+    var orderData = {
+      data: {
+        customerName: document.getElementById('co-first').value.trim() + ' ' + document.getElementById('co-last').value.trim(),
+        email: document.getElementById('co-email').value.trim(),
+        phone: document.getElementById('co-phone').value.trim(),
+        address: document.getElementById('co-address').value.trim(),
+        city: document.getElementById('co-city').value.trim(),
+        total: total,
+        items: cart,
+        orderStatus: 'pending',
+        paymentMethod: selectedPayment,
+        shippingMethod: selectedShipping
+      }
+    };
+
+    try {
+      await fetch(`${window.ENV.API_URL}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+    } catch(e) {
+      console.error('Lỗi tạo đơn trên CMS', e);
+    }
+
+    if (selectedPayment === 'cod') {
+      setTimeout(function() {
+        showAlert('Đặt hàng thành công! Chúng tôi sẽ liên hệ xác nhận đơn hàng của bạn sớm nhất.', 'success');
+        btn.disabled = false;
+        btn.textContent = 'Hoàn tất đơn hàng';
+        sessionStorage.removeItem('tph_cart');
+      }, 1200);
+      return;
+    }
+
+    // ZaloPay
+    try {
+      var resp = await fetch('http://localhost:5000/api/zalopay/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: total,
+          items: cart.map(function(it){ return { itemid: it.name, itemname: it.name, itemprice: it.price, itemquantity: 1 }; }),
+          description: 'The Pack House - Thanh toán đơn hàng',
+          redirect_url: window.location.origin + '/checkout.html'
+        })
+      });
+      var data = await resp.json();
+      if (data.returncode === 1 && data.orderurl) {
+        sessionStorage.removeItem('tph_cart');
+        window.location.href = data.orderurl;
+      } else {
+        showAlert('Lỗi tạo đơn ZaloPay: ' + (data.returnmessage || 'Vui lòng thử lại.'), 'error');
+        btn.disabled = false;
+        btn.textContent = 'Hoàn tất đơn hàng';
+      }
+    } catch(e) {
+      showAlert('Không thể kết nối đến máy chủ thanh toán. Vui lòng thử lại.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Hoàn tất đơn hàng';
+    }
+  }
+
+  // ── Language support ──────────────────────────────────────────
+  var currentLang = 'vi';
+  var strings = {
+    vi: {
+      back: 'Quay lại', help: 'Hỗ trợ', popupTitle: 'Hỗ trợ', popupHours: 'Giờ làm việc: 8:30 – 18:00 hàng ngày\n17 Ngõ 2 Phố Quần Ngựa, Phường Ngọc Hà, Hà Nội',
+      breadCart: 'Giỏ hàng', breadInfo: 'Thông tin', breadPay: 'Thanh toán',
+      contactTitle: 'Thông tin liên hệ', contactPh: 'Email hoặc số điện thoại',
+      delivTitle: 'Địa chỉ giao hàng', firstPh: 'Họ', lastPh: 'Tên', addrPh: 'Địa chỉ', aptPh: 'Căn hộ, tầng, v.v. (tuỳ chọn)', cityPh: 'Thành phố', zipPh: 'Mã bưu chính (tuỳ chọn)', phonePh: 'Số điện thoại', saveLabel: 'Lưu thông tin cho lần mua sau',
+      shipTitle: 'Phương thức vận chuyển', shipStd: 'Tiêu chuẩn', shipStdDesc: '3–5 ngày làm việc', shipFree: 'Miễn phí', shipExpress: 'Nhanh', shipExpressDesc: '1–2 ngày làm việc', shipExpressNote: 'Nhân viên sẽ liên hệ thông báo phí giao hàng cụ thể.',
+      payTitle: 'Thanh toán', paySecure: '🔒 Mọi giao dịch đều được mã hóa và bảo mật.',
+      zpDesc: 'Thanh toán qua Ví ZaloPay, thẻ Visa/Master/JCB hoặc thẻ ATM nội địa. Bạn sẽ được chuyển đến cổng thanh toán ZaloPay để hoàn tất giao dịch.',
+      codLabel: 'Thanh toán khi nhận hàng (COD)', codDesc: 'Thanh toán bằng tiền mặt khi nhận hàng. Áp dụng cho các đơn hàng nội thành Hà Nội.',
+      billTitle: 'Địa chỉ thanh toán', billSame: 'Giống địa chỉ giao hàng', billDiff: 'Dùng địa chỉ khác',
+      submitBtn: 'Hoàn tất đơn hàng', terms: 'Bằng cách đặt hàng, bạn đồng ý với', termsLink: 'Điều khoản dịch vụ', termsEnd: 'của chúng tôi.',
+      orderTitle: 'Đơn hàng của bạn', couponPh: 'Mã giảm giá', couponBtn: 'Áp dụng',
+      subtotal: 'Tạm tính', shipping: 'Phí vận chuyển', discountLbl: 'Giảm giá', total: 'Tổng cộng',
+      accepted: 'Được chấp nhận', storeHours: 'Giờ mở cửa: 8:30 – 18:00 hàng ngày',
+      processing: 'Đang xử lý...', codSuccess: 'Đặt hàng thành công! Chúng tôi sẽ liên hệ xác nhận đơn hàng của bạn sớm nhất.',
+      errEmail:'Vui lòng nhập email hoặc số điện thoại.', errName:'Vui lòng nhập họ và tên.', errAddr:'Vui lòng nhập địa chỉ giao hàng.', errCity:'Vui lòng nhập thành phố.', errPhone:'Vui lòng nhập số điện thoại.',
+      errZP:'Lỗi tạo đơn ZaloPay: ', errConn:'Không thể kết nối đến máy chủ thanh toán. Vui lòng thử lại.', couponOk:'Áp dụng mã giảm giá thành công! Giảm 10%.', couponFail:'Mã giảm giá không hợp lệ.',
+      freeShip: 'Miễn phí'
+    },
+    en: {
+      back: 'Go Back', help: 'Help', popupTitle: 'Support', popupHours: 'Hours: 8:30 AM – 6:00 PM daily\n17 Ngõ 2 Phố Quần Ngựa, Ngọc Hà, Hanoi',
+      breadCart: 'Cart', breadInfo: 'Information', breadPay: 'Payment',
+      contactTitle: 'Contact information', contactPh: 'Email or phone number',
+      delivTitle: 'Delivery address', firstPh: 'Last name', lastPh: 'First name', addrPh: 'Address', aptPh: 'Apartment, suite, etc. (optional)', cityPh: 'City', zipPh: 'Postal code (optional)', phonePh: 'Phone number', saveLabel: 'Save this information for next time',
+      shipTitle: 'Shipping method', shipStd: 'Standard', shipStdDesc: '3–5 business days', shipFree: 'Free', shipExpress: 'Express', shipExpressDesc: '1–2 business days', shipExpressNote: 'Staff will contact you regarding the delivery price.',
+      payTitle: 'Payment', paySecure: '🔒 All transactions are secure and encrypted.',
+      zpDesc: 'Pay via ZaloPay Wallet, Visa/Master/JCB card or domestic ATM card. You will be redirected to the ZaloPay payment gateway to complete your transaction.',
+      codLabel: 'Cash on Delivery (COD)', codDesc: 'Pay with cash upon delivery. Available for Hanoi city orders.',
+      billTitle: 'Billing address', billSame: 'Same as shipping address', billDiff: 'Use a different billing address',
+      submitBtn: 'Complete order', terms: 'By placing your order, you agree to our', termsLink: 'Terms of Service', termsEnd: '.',
+      orderTitle: 'Your order', couponPh: 'Discount code', couponBtn: 'Apply',
+      subtotal: 'Subtotal', shipping: 'Shipping', discountLbl: 'Discount', total: 'Total',
+      accepted: 'Accepted payments', storeHours: 'Hours: 8:30 AM – 6:00 PM daily',
+      processing: 'Processing...', codSuccess: 'Order placed! We will contact you to confirm your order shortly.',
+      errEmail:'Please enter your email or phone number.', errName:'Please enter your name.', errAddr:'Please enter your delivery address.', errCity:'Please enter your city.', errPhone:'Please enter your phone number.',
+      errZP:'ZaloPay order error: ', errConn:'Unable to connect to payment server. Please try again.', couponOk:'Coupon applied! 10% off.', couponFail:'Invalid coupon code.',
+      freeShip: 'Free'
+    }
+  };
+
+  function setLang(lang) {
+    currentLang = lang;
+    var s = strings[lang];
+    document.getElementById('lang-vi').classList.toggle('active', lang==='vi');
+    document.getElementById('lang-en').classList.toggle('active', lang==='en');
+    document.getElementById('back-label').textContent = s.back;
+    document.getElementById('help-btn').textContent = s.help;
+    document.getElementById('popup-title').textContent = s.popupTitle;
+    document.getElementById('popup-hours').innerHTML = s.popupHours.replace('\n','<br>');
+    document.querySelector('.co-breadcrumb').children[0].textContent = s.breadCart;
+    document.querySelector('.co-breadcrumb .active').textContent = s.breadInfo;
+    document.querySelector('.co-breadcrumb').children[4].textContent = s.breadPay;
+    // sections
+    var titles = document.querySelectorAll('.co-section-title');
+    titles[0].textContent = s.contactTitle;
+    titles[1].textContent = s.delivTitle;
+    titles[2].textContent = s.shipTitle;
+    titles[3].textContent = s.payTitle;
+    titles[4].textContent = s.billTitle;
+    document.getElementById('co-email').placeholder = s.contactPh;
+    document.getElementById('co-first').placeholder = s.firstPh;
+    document.getElementById('co-last').placeholder = s.lastPh;
+    document.getElementById('co-address').placeholder = s.addrPh;
+    document.getElementById('co-apt').placeholder = s.aptPh;
+    document.getElementById('co-city').placeholder = s.cityPh;
+    document.getElementById('co-zip').placeholder = s.zipPh;
+    document.getElementById('co-phone').placeholder = s.phonePh;
+    document.querySelector('[for=co-save]').textContent = s.saveLabel;
+    // shipping labels
+    var shipNames = document.querySelectorAll('.co-ship-name');
+    var shipDescs = document.querySelectorAll('.co-ship-desc');
+    if(shipNames[0]) shipNames[0].textContent = s.shipStd;
+    if(shipDescs[0]) shipDescs[0].textContent = s.shipStdDesc;
+    if(shipNames[1]) shipNames[1].textContent = s.shipExpress;
+    if(shipDescs[1]) shipDescs[1].textContent = s.shipExpressDesc;
+    var expNote = document.getElementById('express-note');
+    if (expNote) expNote.textContent = s.shipExpressNote;
+    document.querySelector('.co-ship-price').textContent = s.shipFree;
+    // payment
+    document.querySelector('#opt-zalopay .co-pay-body p').textContent = s.zpDesc;
+    document.querySelector('#opt-cod .co-pay-label').textContent = s.codLabel;
+    document.querySelector('#opt-cod .co-pay-body p').textContent = s.codDesc;
+    document.querySelector('p.co-secure').textContent = s.paySecure;
+    // billing
+    var billNames = document.querySelectorAll('.co-section:nth-of-type(5) .co-ship-name');
+    if(billNames[0]) billNames[0].textContent = s.billSame;
+    if(billNames[1]) billNames[1].textContent = s.billDiff;
+    document.getElementById('co-btn').textContent = s.submitBtn;
+    // right panel
+    document.querySelector('.tph-eyebrow').textContent = s.orderTitle;
+    document.getElementById('co-coupon').placeholder = s.couponPh;
+    document.querySelector('.co-coupon button').textContent = s.couponBtn;
+    document.querySelectorAll('.co-total-row span:first-child')[0].textContent = s.subtotal;
+    document.querySelectorAll('.co-total-row span:first-child')[1].textContent = s.shipping;
+    document.querySelectorAll('.co-total-row span:first-child')[2].textContent = s.discountLbl;
+    document.querySelector('.co-total-row.grand span:first-child').textContent = s.total;
+    document.querySelector('.tph-eyebrow[data-accepted]').textContent = s.accepted;
+    document.getElementById('store-hours').textContent = s.storeHours;
+    // recalc display
+    document.getElementById('shipping-val').textContent = shippingFee ? Number(shippingFee).toLocaleString(lang==='en'?'en-US':'vi-VN')+' ₫' : s.freeShip;
+  }
+
+  function closeSupportPopup(e) {
+    if(e.target === document.getElementById('support-overlay')) document.getElementById('support-overlay').classList.remove('open');
+  }
+
+  // Init
+  renderItems();
+  calcTotal();
+  document.querySelector('#opt-zalopay .co-pay-body').style.display = 'block';
+  document.querySelector('#opt-cod .co-pay-body').style.display = 'none';
+</script>
+</body>
+</html>

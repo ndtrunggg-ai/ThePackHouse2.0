@@ -463,14 +463,14 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
+    orderStatus: Schema.Attribute.Enumeration<
+      ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
     paymentMethod: Schema.Attribute.String;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     shippingMethod: Schema.Attribute.String;
-    status: Schema.Attribute.Enumeration<
-      ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
-    > &
-      Schema.Attribute.DefaultTo<'pending'>;
     total: Schema.Attribute.Integer;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -491,7 +491,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   };
   attributes: {
     brand: Schema.Attribute.Enumeration<
-      ['thule', 'case-logic', 'alpaka', 'bamkel']
+      ['thule', 'case-logic', 'alpaka', 'bamkel', 'point-65']
     > &
       Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
