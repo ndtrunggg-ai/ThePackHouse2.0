@@ -37,6 +37,7 @@ function App() {
 
   const [lang, setLang] = React.useState("vi");
   const [selectedProduct, setSelectedProduct] = React.useState(null);
+  const [faqOpen, setFaqOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
 
@@ -182,9 +183,9 @@ function App() {
 
       <StoreInfo lang={lang} />
       
-      <Faq lang={lang} />
+      <Faq open={faqOpen} onClose={() => setFaqOpen(false)} lang={lang} />
 
-      <Footer lang={lang} />
+      <Footer onOpenFaq={() => setFaqOpen(true)} lang={lang} />
 
       <CartDrawer
         open={cartOpen}

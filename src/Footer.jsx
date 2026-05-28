@@ -1,5 +1,5 @@
 import React from 'react';
-function Footer({ lang }) {
+function Footer({ lang, onOpenFaq }) {
   const isEn = lang === 'en';
 
   const t = {
@@ -21,6 +21,7 @@ function Footer({ lang }) {
     size: isEn ? "Size Guide" : "Hướng dẫn chọn size",
     track: isEn ? "Track Order" : "Theo dõi đơn hàng",
     contact: isEn ? "Contact Us" : "Liên hệ",
+    faq: isEn ? "FAQ" : "Câu Hỏi Thường Gặp (FAQ)",
     visit: isEn ? "Visit Us" : "Ghé thăm",
     open: isEn ? "Open 8:30 - 18:00" : "Mở cửa 8:30 - 18:00",
     bottom1: isEn ? "© TL Investment Joint Stock Company · Authorized Distributor" : "© CÔNG TY CỔ PHẦN TL INVESTMENT · ĐẠI LÝ PHÂN PHỐI CHÍNH HÃNG",
@@ -137,6 +138,7 @@ function Footer({ lang }) {
             <a style={linkStyle} onClick={scrollToTop}>{t.size}</a>
             <a style={linkStyle} onClick={scrollToTop}>{t.track}</a>
             <a style={linkStyle} onClick={scrollToTop}>{t.contact}</a>
+            <a style={linkStyle} onClick={(e) => { e.preventDefault(); onOpenFaq && onOpenFaq(); }}>{t.faq}</a>
           </div>
 
           {/* Visit */}

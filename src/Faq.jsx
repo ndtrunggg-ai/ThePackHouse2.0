@@ -1,9 +1,10 @@
 import React from 'react';
 
-function Faq({ lang }) {
+function Faq({ open, onClose, lang }) {
+  if (!open) return null;
   const isEn = lang === 'en';
 
-  const title = isEn ? "Frequently Asked Questions" : "Các Câu Hỏi Thường Gặp (FAQ)";
+  const title = isEn ? "Frequently Asked Questions" : "Các Câu Hỏi Thường Gặp";
   
   const faqs = [
     {
@@ -25,21 +26,22 @@ function Faq({ lang }) {
   ];
 
   return (
-    <section className="tph-faq">
-      <div className="tph-faq-inner">
-        <h2 className="tph-faq-title">{title}</h2>
+    <div className="tph-modal-overlay" onClick={onClose}>
+      <div className="tph-modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px', padding: '40px', maxHeight: '85vh', overflowY: 'auto' }}>
+        <button className="tph-modal-close" onClick={onClose} aria-label="Close modal">×</button>
+        <h2 className="tph-faq-title" style={{ fontSize: '28px', marginBottom: '32px', textAlign: 'left' }}>{title}</h2>
         <div className="tph-faq-list" itemScope itemType="https://schema.org/FAQPage">
           {faqs.map((faq, i) => (
-            <div key={i} className="tph-faq-item" itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
-              <h3 className="tph-faq-q" itemProp="name">{faq.q}</h3>
+            <div key={i} className="tph-faq-item" itemScope itemProp="mainEntity" itemType="https://schema.org/Question" style={{ paddingBottom: '20px', marginBottom: '20px' }}>
+              <h3 className="tph-faq-q" itemProp="name" style={{ fontSize: '18px' }}>{faq.q}</h3>
               <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
-                <p className="tph-faq-a" itemProp="text">{faq.a}</p>
+                <p className="tph-faq-a" itemProp="text" style={{ fontSize: '15px' }}>{faq.a}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
