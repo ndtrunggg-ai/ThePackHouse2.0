@@ -62,7 +62,7 @@ function ProductCard({ p, onAdd, onView, lang }) {
             if (url && url.startsWith('/')) url = `${window.ENV.API_URL}${url}`;
           }
           if (url) {
-            return <img src={url} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 0 }} />;
+            return <img src={url} loading="lazy" alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 0 }} />;
           }
           return null;
         })() || (p.svg ? (
