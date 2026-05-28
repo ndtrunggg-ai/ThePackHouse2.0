@@ -41,13 +41,13 @@ function App() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
 
-  const fetchProducts = React.useCallback(async (retries = 3) => {
+  const fetchProducts = React.useCallback(async (retries = 5) => {
     setLoading(true);
     setError(null);
     for (let i = 0; i < retries; i++) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout for cold starts
         
         const res = await fetch(`${window.ENV.API_URL}/api/products?populate=*&pagination[pageSize]=100`, {
           signal: controller.signal
@@ -83,6 +83,9 @@ function App() {
         if (i === retries - 1) {
           setError(err.name === 'AbortError' ? 'timeout' : 'network');
           setLoading(false);
+        } else {
+          // Wait before retrying (exponential backoff: 2s, 4s, etc.)
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 2000));
         }
       }
     }
