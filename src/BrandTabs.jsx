@@ -1,3 +1,4 @@
+import React from 'react';
 const BRANDS = [
   { id: "all",        name: "all",         cls: "" },
   { id: "thule",      name: "THULE",       cls: "thule-glyph", origin: "Sweden · 1942" },
@@ -30,4 +31,4 @@ function BrandTabs({ selected, onSelect, lang }) {
 }
 
 window.BRANDS = BRANDS;
-window.BrandTabs = BrandTabs;
+export default BrandTabs;

@@ -1,3 +1,4 @@
+import React from 'react';
 // Recursively flattens a specs value (object, array, primitive) into a display string
 function flattenSpecs(val, depth) {
   if (depth === undefined) depth = 0;
@@ -90,4 +91,4 @@ function ProductCard({ p, onAdd, onView, lang }) {
   );
 }
 
-window.ProductCard = ProductCard;
+export default ProductCard;

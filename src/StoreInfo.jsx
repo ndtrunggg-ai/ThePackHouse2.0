@@ -1,3 +1,4 @@
+import React from 'react';
 function StoreInfo({ lang }) {
   const isEn = lang === 'en';
 
@@ -59,4 +60,4 @@ function StoreInfo({ lang }) {
   );
 }
 
-window.StoreInfo = StoreInfo;
+export default StoreInfo;

@@ -1,3 +1,4 @@
+import React from 'react';
 function Footer({ lang }) {
   const isEn = lang === 'en';
 
@@ -154,4 +155,4 @@ function Footer({ lang }) {
   );
 }
 
-window.Footer = Footer;
+export default Footer;

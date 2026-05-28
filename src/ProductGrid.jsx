@@ -1,3 +1,4 @@
+import React from 'react';
 // ─── ProductCard + ProductGrid (bundled) ─────────────────────────────────────
 
 function flattenSpecs(val) {
@@ -151,4 +152,4 @@ function ProductGrid({ brand, type, search, sort, onAdd, onView, onClearFilters,
 }
 
 window.ProductCard = ProductCard;
-window.ProductGrid = ProductGrid;
+export default ProductGrid;

@@ -1,3 +1,4 @@
+import React from 'react';
 function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, setLang }) {
   const isEn = lang === 'en';
   const [supportOpen, setSupportOpen] = React.useState(false);
@@ -124,4 +125,4 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
   );
 }
 
-window.Nav = Nav;
+export default Nav;

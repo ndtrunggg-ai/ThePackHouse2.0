@@ -1,3 +1,4 @@
+import React from 'react';
 function Hero({ onShopAll, lang }) {
   const isEn = lang === 'en';
   
@@ -72,4 +73,4 @@ function Hero({ onShopAll, lang }) {
   );
 }
 
-window.Hero = Hero;
+export default Hero;

@@ -1,3 +1,4 @@
+import React from 'react';
 function ProductModal({ product, onClose, onAdd, lang }) {
   if (!product) return null;
   const isEn = lang === 'en';
@@ -160,4 +161,4 @@ function ProductModal({ product, onClose, onAdd, lang }) {
   );
 }
 
-window.ProductModal = ProductModal;
+export default ProductModal;

@@ -1,3 +1,4 @@
+import React from 'react';
 function CartDrawer({ open, items, onClose, onRemove, lang }) {
   const isEn = lang === 'en';
   const total = items.reduce((s, i) => s + i.price, 0);
@@ -74,4 +75,4 @@ function CartDrawer({ open, items, onClose, onRemove, lang }) {
   );
 }
 
-window.CartDrawer = CartDrawer;
+export default CartDrawer;

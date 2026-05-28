@@ -1,3 +1,4 @@
+import React from 'react';
 const TYPES = [
   { id: "all",         name: "Tất cả sản phẩm" },
   { id: "backpacks",   name: "Balo" },
@@ -62,4 +63,4 @@ function TypeFilters({ selected, onSelect, resultCount, sort, onSort, lang }) {
 }
 
 window.TYPES = TYPES;
-window.TypeFilters = TypeFilters;
+export default TypeFilters;
