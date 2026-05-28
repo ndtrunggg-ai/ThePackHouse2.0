@@ -1,15 +1,16 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
   build: {
+    outDir: 'docs',
+    emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        admin: resolve(__dirname, 'admin.html'),
-        checkout: resolve(__dirname, 'checkout.html')
+        main: 'index.html',
+        admin: 'admin.html',
+        checkout: 'checkout.html'
       }
     }
   }
