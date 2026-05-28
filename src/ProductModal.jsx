@@ -48,7 +48,6 @@ function ProductModal({ product, onClose, onAdd, lang }) {
             {images.length > 0 ? (
               <img
                 src={images[idx]}
-                loading="lazy"
                 alt={product.name}
                 style={{ maxWidth: '100%', maxHeight: '340px', objectFit: 'contain', transition: 'opacity 0.2s' }}
               />
@@ -84,7 +83,6 @@ function ProductModal({ product, onClose, onAdd, lang }) {
                 <img
                   key={i}
                   src={url}
-                  loading="lazy"
                   onClick={() => setIdx(i)}
                   style={{
                     width: '52px', height: '52px', objectFit: 'contain',

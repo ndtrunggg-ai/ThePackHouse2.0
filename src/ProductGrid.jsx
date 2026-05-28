@@ -22,7 +22,7 @@ function getImageUrls(p) {
   return [];
 }
 
-function ProductCard({ p, onAdd, onView, lang, lazy = true }) {
+function ProductCard({ p, onAdd, onView, lang }) {
   const isEn = lang === 'en';
   const fmt = (n) => (parseInt(n, 10) || 0).toLocaleString(isEn ? 'en-US' : 'vi-VN') + ' ₫';
   const t = { addToCart: isEn ? "Add to cart" : "Thêm vào giỏ" };
@@ -47,7 +47,6 @@ function ProductCard({ p, onAdd, onView, lang, lazy = true }) {
           <img
             src={images[imgIdx]}
             alt={p.name}
-            loading={lazy ? "lazy" : undefined}
             style={{ width: '100%', height: '100%', objectFit: 'contain', position: 'absolute', inset: 0, zIndex: 0, padding: '12px', boxSizing: 'border-box' }}
           />
         ) : (
@@ -147,7 +146,7 @@ function ProductGrid({ brand, type, search, sort, onAdd, onView, onClearFilters,
 
   return (
     <div className="tph-grid">
-      {list.map((p, index) => <ProductCard key={p.id || p.documentId} p={p} onAdd={onAdd} onView={onView} lang={lang} lazy={index > 3} />)}
+      {list.map((p) => <ProductCard key={p.id || p.documentId} p={p} onAdd={onAdd} onView={onView} lang={lang} />)}
     </div>
   );
 }
