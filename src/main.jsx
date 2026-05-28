@@ -49,7 +49,7 @@ function App() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout for cold starts
         
-        const res = await fetch(`${window.ENV.API_URL}/api/products?populate=*&pagination[pageSize]=100`, {
+        const res = await fetch(`${window.ENV.API_URL}/api/products?populate[image][fields][0]=url&pagination[pageSize]=100`, {
           signal: controller.signal
         });
         clearTimeout(timeoutId);
