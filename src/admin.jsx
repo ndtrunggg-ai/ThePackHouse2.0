@@ -361,24 +361,24 @@ function AdminApp() {
           <div className="admin-brand-sub">Hệ thống Quản trị</div>
         </div>
         <nav className="admin-nav">
-          <a href="#" className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('orders'); }}>
+          <a href="#orders" className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('orders'); }}>
             <span className="admin-nav-icon">🛒</span>
             Đơn hàng
             {newOrders.length > 0 && <span className="admin-badge-red">{newOrders.length}</span>}
           </a>
-          <a href="#" className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('products'); }}>
+          <a href="#products" className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('products'); }}>
             <span className="admin-nav-icon">📦</span>
             Sản phẩm
           </a>
-          <a href="#" className={`admin-nav-item ${activeTab === 'customers' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('customers'); }}>
+          <a href="#customers" className={`admin-nav-item ${activeTab === 'customers' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('customers'); }}>
             <span className="admin-nav-icon">👥</span>
             Khách hàng
           </a>
-          <a href="#" className={`admin-nav-item ${activeTab === 'shipping' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('shipping'); }}>
+          <a href="#shipping" className={`admin-nav-item ${activeTab === 'shipping' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('shipping'); }}>
             <span className="admin-nav-icon">🚚</span>
             Vận chuyển
           </a>
-          <a href="#" className={`admin-nav-item ${activeTab === 'analytics' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('analytics'); }}>
+          <a href="#analytics" className={`admin-nav-item ${activeTab === 'analytics' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('analytics'); }}>
             <span className="admin-nav-icon">📊</span>
             Phân tích
           </a>

@@ -73,7 +73,7 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
       )}
 
       <div className="tph-nav-inner">
-        <a className="tph-wordmark-container" href="#">
+        <a className="tph-wordmark-container" href="/">
           <img src="./assets/logo.png" alt="Logo" className="tph-nav-logo" />
           <span className="tph-wordmark">The Pack House</span>
         </a>
@@ -91,10 +91,10 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
             />
           </div>
           <nav className="tph-nav-links">
-            <a className="tph-nav-link" href="#" onClick={scrollToShop}>{t.shop}</a>
-            <a className="tph-nav-link" href="#" onClick={scrollToShop}>{t.brands}</a>
-            <a className="tph-nav-link" href="#" onClick={scrollToVisit}>{t.visit}</a>
-            <a className="tph-nav-link" href="#" onClick={openSupport}>{t.help}</a>
+            <a className="tph-nav-link" href="#shop" onClick={scrollToShop}>{t.shop}</a>
+            <a className="tph-nav-link" href="#shop" onClick={scrollToShop}>{t.brands}</a>
+            <a className="tph-nav-link" href="#visit" onClick={scrollToVisit}>{t.visit}</a>
+            <a className="tph-nav-link" href="#support" onClick={openSupport}>{t.help}</a>
           </nav>
           <div className="tph-lang-toggle">
             <button className={`tph-lang-btn ${isEn ? 'active' : ''}`} onClick={() => setLang('en')}>EN</button>
