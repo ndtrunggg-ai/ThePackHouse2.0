@@ -4,7 +4,7 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
   const [supportOpen, setSupportOpen] = React.useState(false);
 
   const t = {
-    searchPlaceholder: isEn ? "Search Thule, backpacks, luggage..." : "Tìm kiếm Thule, balo, túi xách...",
+    searchPlaceholder: "",
     shop: isEn ? "Shop" : "Cửa hàng",
     brands: isEn ? "Brands" : "Thương hiệu",
     visit: isEn ? "Visit" : "Ghé thăm",
