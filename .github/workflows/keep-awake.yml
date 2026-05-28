@@ -1,0 +1,16 @@
+name: Keep Strapi Awake
+
+on:
+  schedule:
+    # Run every 14 minutes to prevent the free tier container from sleeping
+    - cron: '*/14 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Strapi API
+        run: |
+          curl -sS "https://whimsical-renewal-84c9832818.strapiapp.com/api/products?pagination\[pageSize\]=1" > /dev/null
+          echo "Ping successful!"
