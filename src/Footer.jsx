@@ -11,6 +11,8 @@ function Footer({ lang }) {
     luggage: isEn ? "Luggage" : "Vali",
     duffel: isEn ? "Duffels" : "Túi du lịch",
     laptop: isEn ? "Laptop Bags" : "Túi laptop",
+    sling: isEn ? "Sling / Fanny bags" : "Túi đeo chéo / bao tử",
+    camera: isEn ? "Camera bags" : "Túi máy ảnh",
     accessory: isEn ? "Accessories" : "Phụ kiện",
     brands: isEn ? "Brands" : "Thương hiệu",
     support: isEn ? "Support" : "Hỗ trợ",
@@ -114,6 +116,8 @@ function Footer({ lang }) {
             <a style={linkStyle} onClick={(e) => scrollToShop(e, 'luggage')}>{t.luggage}</a>
             <a style={linkStyle} onClick={(e) => scrollToShop(e, 'duffel')}>{t.duffel}</a>
             <a style={linkStyle} onClick={(e) => scrollToShop(e, 'laptop-bags')}>{t.laptop}</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'sling')}>{t.sling}</a>
+            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'camera')}>{t.camera}</a>
             <a style={linkStyle} onClick={(e) => scrollToShop(e, 'accessory')}>{t.accessory}</a>
           </div>
 
@@ -142,6 +146,7 @@ function Footer({ lang }) {
             <a style={linkStyle} href="https://maps.google.com/?q=17+Ngõ+2+Phố+Quần+Ngựa+Hà+Nội" target="_blank" rel="noopener noreferrer">Phường Ngọc Hà, Hà Nội, Việt Nam</a>
             <a style={linkStyle}>{t.open}</a>
             <a style={linkStyle} href="tel:0981228826">0981 228 826</a>
+            <a style={linkStyle} href="tel:0964117868">0964 117 868</a>
             <a style={linkStyle} href="mailto:thepackhouse.vn@gmail.com">thepackhouse.vn@gmail.com</a>
           </div>
         </div>

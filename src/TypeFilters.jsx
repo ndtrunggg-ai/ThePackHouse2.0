@@ -6,6 +6,8 @@ const TYPES = [
   { id: "luggage",     name: "Vali" },
   { id: "daypacks",    name: "Balo Mô Tô" },
   { id: "laptop-bags", name: "Túi laptop" },
+  { id: "sling",       name: "Túi đeo chéo / bao tử" },
+  { id: "camera",      name: "Túi máy ảnh" },
   { id: "accessory",   name: "Phụ kiện" },
 ];
 
@@ -19,6 +21,8 @@ function TypeFilters({ selected, onSelect, resultCount, sort, onSort, lang }) {
     "luggage": isEn ? "Luggage" : "Vali",
     "daypacks": isEn ? "Motorbike Backpacks" : "Balo Mô Tô",
     "laptop-bags": isEn ? "Laptop bags" : "Túi laptop",
+    "sling": isEn ? "Sling / Fanny bags" : "Túi đeo chéo / bao tử",
+    "camera": isEn ? "Camera bags" : "Túi máy ảnh",
     "accessory": isEn ? "Accessories" : "Phụ kiện"
   };
 

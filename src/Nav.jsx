@@ -59,7 +59,7 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
           </div>
           <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'16px',fontSize:'14px',color:'var(--ph-cocoa-850)'}}>
             <span style={{fontSize:'18px',width:'28px',textAlign:'center'}}>📞</span>
-            <span>{t.popupPhone} <a href="tel:0981228826" style={{color:'var(--ph-bronze-500)',textDecoration:'none'}}>0981 228 826</a></span>
+            <span>{t.popupPhone} <a href="tel:0981228826" style={{color:'var(--ph-bronze-500)',textDecoration:'none'}}>0981 228 826</a> - <a href="tel:0964117868" style={{color:'var(--ph-bronze-500)',textDecoration:'none'}}>0964 117 868</a></span>
           </div>
           <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'16px',fontSize:'14px',color:'var(--ph-cocoa-850)'}}>
             <span style={{fontSize:'18px',width:'28px',textAlign:'center'}}>✉️</span>

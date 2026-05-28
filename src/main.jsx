@@ -56,6 +56,12 @@ function App() {
           if (nameLower.includes('gtx 25l') || nameLower.includes('gtx 20l')) {
             overrideType = 'daypacks';
           }
+          if (nameLower.includes('chéo') || nameLower.includes('bao tử') || nameLower.includes('sling') || nameLower.includes('crossbody')) {
+            overrideType = 'sling';
+          }
+          if (nameLower.includes('máy ảnh') || nameLower.includes('camera')) {
+            overrideType = 'camera';
+          }
           return {
             ...p,
             type: overrideType,
