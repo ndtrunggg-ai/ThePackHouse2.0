@@ -457,6 +457,8 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
   .tph-nav-search { min-width: 0; max-width: 160px; margin-right: 0; }
   .tph-nav-search input { font-size: 12px; }
   .tph-nav-links { display: none; } /* Hide text links on mobile, rely on search/cart */
+  .tph-wordmark { display: none; } /* Hide "The Pack House" text, keep logo */
+  .tph-nav-band { display: none; } /* Hide the entire promotional ticker on mobile */
 
   /* Hero */
   .tph-hero { grid-template-columns: 1fr; min-height: auto; }
