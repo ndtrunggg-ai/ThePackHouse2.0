@@ -10,7 +10,8 @@ export default defineConfig({
       input: {
         main: 'index.html',
         admin: 'admin.html',
-        checkout: 'checkout.html'
+        checkout: 'checkout.html',
+        return_policy: 'return-policy.html'
       }
     }
   }

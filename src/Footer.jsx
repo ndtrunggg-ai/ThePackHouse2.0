@@ -133,7 +133,7 @@ function Footer({ lang, onOpenFaq }) {
           {/* Support */}
           <div>
             <div className="tph-footer-h">{t.support}</div>
-            <a style={linkStyle} onClick={scrollToTop}>{t.shipping}</a>
+            <a style={linkStyle} href="/return-policy.html">{t.shipping}</a>
             <a style={linkStyle} onClick={scrollToTop}>{t.warranty}</a>
             <a style={linkStyle} onClick={scrollToTop}>{t.size}</a>
             <a style={linkStyle} onClick={scrollToTop}>{t.track}</a>
