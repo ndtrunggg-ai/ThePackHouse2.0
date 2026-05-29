@@ -50,11 +50,21 @@ async function generateFeed() {
 `;
 
     products.forEach(p => {
-      // Find the image URL
+      // Find the image URL, preferring JPG/PNG over AVIF for Google Merchant
       let imageUrl = '';
       if (p.image) {
         const imgObj = Array.isArray(p.image) ? p.image[0] : (p.image.data ? (Array.isArray(p.image.data) ? p.image.data[0] : p.image.data) : p.image);
-        const url = imgObj && (imgObj.url || (imgObj.attributes && imgObj.attributes.url));
+        let url = imgObj && (imgObj.url || (imgObj.attributes && imgObj.attributes.url));
+        
+        // Google Merchant does not support AVIF/WEBP. Try to get a standard format from Strapi's 'formats'
+        if (url && (url.endsWith('.avif') || url.endsWith('.webp')) && imgObj.formats) {
+          const formats = imgObj.formats;
+          const altFormat = formats.large || formats.medium || formats.small || formats.thumbnail;
+          if (altFormat && altFormat.url) {
+            url = altFormat.url;
+          }
+        }
+        
         if (url) {
           imageUrl = url.startsWith('/') ? `https://whimsical-renewal-84c9832818.strapiapp.com${url}` : url;
         }
@@ -82,6 +92,7 @@ async function generateFeed() {
       <g:availability>${availability}</g:availability>
       <g:price>${p.price} VND</g:price>
       <g:brand>${escapeXML(brand)}</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
       ${p.original_price ? `<g:sale_price>${p.price} VND</g:sale_price>\n      <g:price>${p.original_price} VND</g:price>` : ''}
     </item>
 `;
