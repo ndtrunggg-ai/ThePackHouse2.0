@@ -13,15 +13,26 @@ function AdminApp() {
   const [activeTab, setActiveTab] = React.useState("orders");
   const [selectedOrder, setSelectedOrder] = React.useState(null);
 
+  const [isLoggingIn, setIsLoggingIn] = React.useState(false);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoggingIn(true);
+    
+    // If Strapi is asleep, it takes ~30-40s to wake up
+    const timeoutAlert = setTimeout(() => {
+      setError("Hệ thống đang khởi động lại máy chủ (có thể mất 30-40 giây). Vui lòng không tắt trang...");
+    }, 5000);
+
     try {
       const res = await fetch(`${API_URL}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email, password })
       });
+      clearTimeout(timeoutAlert);
+      
       const data = await res.json();
       if (data.data && data.data.token) {
         localStorage.setItem("admin_token", data.data.token);
@@ -30,7 +41,10 @@ function AdminApp() {
         setError("Thông tin đăng nhập không hợp lệ");
       }
     } catch (err) {
-      setError("Không thể kết nối đến máy chủ");
+      clearTimeout(timeoutAlert);
+      setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau 1 phút.");
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -110,7 +124,9 @@ function AdminApp() {
               onChange={e => setPassword(e.target.value)} 
               required 
             />
-            <button type="submit" className="admin-btn">Đăng nhập</button>
+            <button type="submit" className="admin-btn" disabled={isLoggingIn}>
+              {isLoggingIn ? 'Đang kết nối...' : 'Đăng nhập'}
+            </button>
           </form>
         </div>
       </div>
