@@ -154,6 +154,16 @@ function App() {
     shopSub: isEn ? "Every product here is available at our Quan Ngua store. Filter by brand, type, or just browse." : "Mọi sản phẩm trên trang này đều có sẵn tại cửa hàng Quần Ngựa. Lọc theo thương hiệu, phân loại hoặc chỉ cần lướt xem."
   };
 
+  const handleViewProduct = (p) => {
+    setSelectedProduct(p);
+    if (p) window.history.pushState(null, '', `/product-${p.id}.html`);
+  };
+
+  const handleCloseProduct = () => {
+    setSelectedProduct(null);
+    window.history.pushState(null, '', '/');
+  };
+
   return (
     <>
       <Nav
@@ -189,7 +199,7 @@ function App() {
           search={search}
           sort={sort}
           onAdd={handleAdd}
-          onView={setSelectedProduct}
+          onView={handleViewProduct}
           onClearFilters={handleClear}
           loading={loading}
           error={error}
@@ -214,7 +224,7 @@ function App() {
 
       <ProductModal
         product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
+        onClose={handleCloseProduct}
         onAdd={handleAdd}
         lang={lang}
       />
