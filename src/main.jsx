@@ -104,10 +104,13 @@ function App() {
 
   React.useEffect(() => {
     if (products.length > 0 && !window.__productModalOpened) {
-      const match = window.location.pathname.match(/\/product-([a-zA-Z0-9_]+)\.html/);
-      if (match) {
+      const match = window.location.pathname.match(/\/(.*?)-(\d+)\.html/);
+      // Fallback check for old product-123.html format just in case
+      const oldMatch = window.location.pathname.match(/\/product-([a-zA-Z0-9_]+)\.html/);
+      
+      if (match || oldMatch) {
         window.__productModalOpened = true;
-        const id = match[1];
+        const id = match ? match[2] : oldMatch[1];
         const p = products.find(x => String(x.id) === id || String(x.documentId) === id);
         if (p) {
           setSelectedProduct(p);
@@ -154,9 +157,24 @@ function App() {
     shopSub: isEn ? "Every product here is available at our Quan Ngua store. Filter by brand, type, or just browse." : "Mọi sản phẩm trên trang này đều có sẵn tại cửa hàng Quần Ngựa. Lọc theo thương hiệu, phân loại hoặc chỉ cần lướt xem."
   };
 
+  const slugify = (text) => {
+    if (!text) return 'product';
+    return text.toString().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d").replace(/Đ/g, "D")
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
+  };
+
   const handleViewProduct = (p) => {
     setSelectedProduct(p);
-    if (p) window.history.pushState(null, '', `/product-${p.id}.html`);
+    if (p) {
+      const slug = slugify(p.name);
+      window.history.pushState(null, '', `/${slug}-${p.id}.html`);
+    }
   };
 
   const handleCloseProduct = () => {

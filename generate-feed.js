@@ -35,6 +35,18 @@ function escapeXML(unsafe) {
     });
 }
 
+function slugify(text) {
+  if (!text) return 'product';
+  return text.toString().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d").replace(/Đ/g, "D")
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
+
 async function generateFeed() {
   try {
     console.log('Fetching products from Strapi...');
@@ -62,6 +74,17 @@ async function generateFeed() {
     <priority>1.0</priority>
   </url>
 `;
+
+    // Add important category/brand pages to sitemap
+    const categories = ['?brand=thule', '?brand=case-logic', '?brand=point-65', '?type=backpack', '?type=luggage', '?type=sling', '?type=duffel'];
+    categories.forEach(cat => {
+      sitemap += `  <url>
+    <loc>${SITE_URL}/${cat}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+`;
+    });
 
     const indexPath = path.join(docsDir, 'index.html');
     let indexHtmlTemplate = '';
@@ -101,7 +124,9 @@ async function generateFeed() {
         brand = 'Case Logic';
       }
       
-      const productUrl = `${SITE_URL}/product-${p.id}.html`;
+      const slug = slugify(p.name);
+      const filename = `${slug}-${p.id}.html`;
+      const productUrl = `${SITE_URL}/${filename}`;
 
       xml += `    <item>
       <g:id>${p.id}</g:id>
@@ -167,7 +192,24 @@ async function generateFeed() {
 </head>`;
         
         productHtml = productHtml.replace('</head>', headInjection);
-        fs.writeFileSync(path.join(docsDir, `product-${p.id}.html`), productHtml);
+
+        // Inject raw HTML for AI bots that don't execute JS
+        const seoBody = `<div id="root">
+    <main itemscope itemtype="https://schema.org/Product">
+      <h1 itemprop="name">${escapeXML(p.name)}</h1>
+      <p itemprop="description">${desc}</p>
+      <p>Brand: <span itemprop="brand">${escapeXML(brand)}</span></p>
+      <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+        <span itemprop="priceCurrency">VND</span>
+        <span itemprop="price">${p.price}</span>
+        <link itemprop="availability" href="${p.quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"}" />
+      </div>
+      ${imageUrl ? `<img itemprop="image" src="${escapeXML(imageUrl)}" alt="${escapeXML(p.name)}" />` : ''}
+    </main>
+  </div>`;
+        productHtml = productHtml.replace('<div id="root"></div>', seoBody);
+
+        fs.writeFileSync(path.join(docsDir, filename), productHtml);
       }
     });
 
