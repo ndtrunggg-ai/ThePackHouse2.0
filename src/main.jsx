@@ -30,8 +30,29 @@ function App() {
   const [products, setProducts] = React.useState([]);
   const [cartOpen, setCartOpen] = React.useState(false);
   const [items, setItems] = React.useState([]);
-  const [brand, setBrand] = React.useState("all");
-  const [type, setType] = React.useState("all");
+  const getInitialBrand = () => {
+    const path = window.location.pathname;
+    if (path.includes('thule.html')) return 'thule';
+    if (path.includes('case-logic.html')) return 'case-logic';
+    if (path.includes('point-65.html')) return 'point-65';
+    return 'all';
+  };
+
+  const getInitialType = () => {
+    const path = window.location.pathname;
+    if (path.includes('balo.html')) return 'backpacks';
+    if (path.includes('tui-xach.html')) return 'duffel';
+    if (path.includes('vali.html')) return 'luggage';
+    if (path.includes('balo-mo-to.html')) return 'daypacks';
+    if (path.includes('tui-laptop.html')) return 'laptop-bags';
+    if (path.includes('tui-deo-cheo.html')) return 'sling';
+    if (path.includes('tui-may-anh.html')) return 'camera';
+    if (path.includes('phu-kien.html')) return 'accessory';
+    return 'all';
+  };
+
+  const [brand, setBrand] = React.useState(getInitialBrand());
+  const [type, setType] = React.useState(getInitialType());
   const [search, setSearch] = React.useState("");
   const [sort, setSort] = React.useState("featured");
 
@@ -182,6 +203,23 @@ function App() {
     window.history.pushState(null, '', '/');
   };
 
+  const handleBrandSelect = (b) => {
+    setBrand(b);
+    const href = b === 'all' ? '/' : `/${b}.html`;
+    window.history.pushState(null, '', href);
+  };
+
+  const handleTypeSelect = (tId) => {
+    setType(tId);
+    const typeHrefs = {
+      "all": "/", "backpacks": "/balo.html", "duffel": "/tui-xach.html", 
+      "luggage": "/vali.html", "daypacks": "/balo-mo-to.html", 
+      "laptop-bags": "/tui-laptop.html", "sling": "/tui-deo-cheo.html", 
+      "camera": "/tui-may-anh.html", "accessory": "/phu-kien.html"
+    };
+    window.history.pushState(null, '', typeHrefs[tId] || "/");
+  };
+
   return (
     <>
       <Nav
@@ -201,10 +239,10 @@ function App() {
           <p className="tph-shop-sub">{t.shopSub}</p>
         </div>
 
-        <BrandTabs selected={brand} onSelect={setBrand} lang={lang} />
+        <BrandTabs selected={brand} onSelect={handleBrandSelect} lang={lang} />
         <TypeFilters
           selected={type}
-          onSelect={setType}
+          onSelect={handleTypeSelect}
           resultCount={filteredCount}
           sort={sort}
           onSort={setSort}

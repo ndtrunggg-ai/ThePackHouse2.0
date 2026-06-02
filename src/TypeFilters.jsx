@@ -38,17 +38,33 @@ function TypeFilters({ selected, onSelect, resultCount, sort, onSort, lang }) {
   return (
     <div className="tph-filter-bar">
       <div className="tph-chips" role="tablist" aria-label="Filter by product type">
-        {TYPES.map((tObj) => (
-          <button
-            key={tObj.id}
-            role="tab"
-            aria-selected={selected === tObj.id}
-            className={"tph-chip" + (selected === tObj.id ? " on" : "")}
-            onClick={() => onSelect(tObj.id)}
-          >
-            {TYPE_NAMES[tObj.id]}
-          </button>
-        ))}
+        {TYPES.map((tObj) => {
+          const typeHrefs = {
+            "all": "/",
+            "backpacks": "/balo.html",
+            "duffel": "/tui-xach.html",
+            "luggage": "/vali.html",
+            "daypacks": "/balo-mo-to.html",
+            "laptop-bags": "/tui-laptop.html",
+            "sling": "/tui-deo-cheo.html",
+            "camera": "/tui-may-anh.html",
+            "accessory": "/phu-kien.html"
+          };
+          const href = typeHrefs[tObj.id] || "/";
+          return (
+            <a
+              key={tObj.id}
+              href={href}
+              role="tab"
+              aria-selected={selected === tObj.id}
+              className={"tph-chip" + (selected === tObj.id ? " on" : "")}
+              onClick={(e) => { e.preventDefault(); onSelect(tObj.id); }}
+              style={{ textDecoration: 'none', display: 'inline-block' }}
+            >
+              {TYPE_NAMES[tObj.id]}
+            </a>
+          );
+        })}
       </div>
       <div className="tph-filter-right">
         <span className="tph-result-count">{resultCount} {t.pieces}</span>

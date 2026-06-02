@@ -12,18 +12,21 @@ function BrandTabs({ selected, onSelect, lang }) {
     <div className="tph-brand-tabs" role="tablist" aria-label="Filter by brand">
       {BRANDS.map((b) => {
         const isActive = selected === b.id;
+        const href = b.id === 'all' ? '/' : `/${b.id}.html`;
         return (
-          <button
+          <a
             key={b.id}
+            href={href}
             role="tab"
             aria-selected={isActive}
             className={"tph-brand-tab" + (isActive ? " active" : "")}
-            onClick={() => onSelect(b.id)}
+            onClick={(e) => { e.preventDefault(); onSelect(b.id); }}
+            style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
             <span className={"tph-brand-glyph " + b.cls}>{b.id === 'all' ? (isEn ? "All Brands" : "Tất cả") : b.name}</span>
             {b.origin && <span className="tph-brand-origin">{b.origin}</span>}
             {!b.origin && <span className="tph-brand-origin">{isEn ? "Show everything" : "Xem tất cả"}</span>}
-          </button>
+          </a>
         );
       })}
     </div>
