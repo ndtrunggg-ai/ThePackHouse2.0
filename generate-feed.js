@@ -150,16 +150,16 @@ async function generateFeed() {
 
       xml += `    <item>
       <g:id>${p.id}</g:id>
-      <g:title>${escapeXML(p.name)}</g:title>
-      <g:description>${escapeXML(p.description || p.name)}</g:description>
-      <g:link>${productUrl}</g:link>
+      <title>${escapeXML(p.name)}</title>
+      <description>${escapeXML(p.description || p.name)}</description>
+      <link>${productUrl}</link>
       <g:image_link>${escapeXML(imageUrl)}</g:image_link>
       <g:condition>new</g:condition>
       <g:availability>${availability}</g:availability>
-      <g:price>${p.price} VND</g:price>
+      <g:price>${p.original_price ? p.original_price : p.price} VND</g:price>
+      ${p.original_price ? `<g:sale_price>${p.price} VND</g:sale_price>` : ''}
       <g:brand>${escapeXML(brand)}</g:brand>
       <g:identifier_exists>no</g:identifier_exists>
-      ${p.original_price ? `<g:sale_price>${p.price} VND</g:sale_price>\n      <g:price>${p.original_price} VND</g:price>` : ''}
     </item>
 `;
 
