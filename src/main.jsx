@@ -102,6 +102,20 @@ function App() {
     return () => window.removeEventListener('tph-filter', handleFilter);
   }, []);
 
+  React.useEffect(() => {
+    if (products.length > 0 && !window.__productModalOpened) {
+      const match = window.location.pathname.match(/\/product-([a-zA-Z0-9_]+)\.html/);
+      if (match) {
+        window.__productModalOpened = true;
+        const id = match[1];
+        const p = products.find(x => String(x.id) === id || String(x.documentId) === id);
+        if (p) {
+          setSelectedProduct(p);
+        }
+      }
+    }
+  }, [products]);
+
   const getFirstImage = (p) => {
     if (p.image_url) return p.image_url;
     if (p.image) {

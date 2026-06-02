@@ -41,6 +41,11 @@ async function generateFeed() {
     const result = await fetchProducts();
     const products = result.data || [];
 
+    const docsDir = path.join(__dirname, 'docs');
+    if (!fs.existsSync(docsDir)) {
+      fs.mkdirSync(docsDir);
+    }
+
     let xml = `<?xml version="1.0"?>
 <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
   <channel>
@@ -49,14 +54,29 @@ async function generateFeed() {
     <description>Sản phẩm Balo, Túi Xách, Vali từ The Pack House</description>
 `;
 
+    let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${SITE_URL}/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+`;
+
+    const indexPath = path.join(docsDir, 'index.html');
+    let indexHtmlTemplate = '';
+    if (fs.existsSync(indexPath)) {
+      indexHtmlTemplate = fs.readFileSync(indexPath, 'utf8');
+    } else {
+      console.warn('docs/index.html not found, cannot generate product pages.');
+    }
+
     products.forEach(p => {
-      // Find the image URL, preferring JPG/PNG over AVIF for Google Merchant
       let imageUrl = '';
       if (p.image) {
         const imgObj = Array.isArray(p.image) ? p.image[0] : (p.image.data ? (Array.isArray(p.image.data) ? p.image.data[0] : p.image.data) : p.image);
         let url = imgObj && (imgObj.url || (imgObj.attributes && imgObj.attributes.url));
         
-        // Google Merchant does not support AVIF/WEBP. Try to get a standard format from Strapi's 'formats'
         if (url && (url.endsWith('.avif') || url.endsWith('.webp')) && imgObj.formats) {
           const formats = imgObj.formats;
           const altFormat = formats.large || formats.medium || formats.small || formats.thumbnail;
@@ -72,7 +92,6 @@ async function generateFeed() {
       
       const availability = p.quantity > 0 ? 'in_stock' : 'out_of_stock';
       
-      // Calculate brand
       let brand = p.brand;
       if (p.name && (p.name.toLowerCase().includes('mt carrier') || p.name.toLowerCase().includes('point 65'))) {
         brand = 'Point 65 North';
@@ -82,11 +101,13 @@ async function generateFeed() {
         brand = 'Case Logic';
       }
       
+      const productUrl = `${SITE_URL}/product-${p.id}.html`;
+
       xml += `    <item>
       <g:id>${p.id}</g:id>
       <g:title>${escapeXML(p.name)}</g:title>
       <g:description>${escapeXML(p.description || p.name)}</g:description>
-      <g:link>${SITE_URL}</g:link>
+      <g:link>${productUrl}</g:link>
       <g:image_link>${escapeXML(imageUrl)}</g:image_link>
       <g:condition>new</g:condition>
       <g:availability>${availability}</g:availability>
@@ -96,18 +117,67 @@ async function generateFeed() {
       ${p.original_price ? `<g:sale_price>${p.price} VND</g:sale_price>\n      <g:price>${p.original_price} VND</g:price>` : ''}
     </item>
 `;
+
+      sitemap += `  <url>
+    <loc>${productUrl}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+`;
+
+      if (indexHtmlTemplate) {
+        const title = escapeXML(`${p.name} - The Pack House`);
+        const desc = escapeXML(p.description || p.name);
+        
+        let productHtml = indexHtmlTemplate;
+        
+        productHtml = productHtml.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+        productHtml = productHtml.replace(/<meta name="description" content=".*?">/, `<meta name="description" content="${desc}" />`);
+        
+        const structuredData = {
+          "@context": "https://schema.org/",
+          "@type": "Product",
+          "name": p.name,
+          "image": imageUrl ? [imageUrl] : [],
+          "description": p.description || p.name,
+          "sku": p.id,
+          "brand": {
+            "@type": "Brand",
+            "name": brand || "The Pack House"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": productUrl,
+            "priceCurrency": "VND",
+            "price": p.price,
+            "availability": p.quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        };
+
+        const headInjection = `
+  <meta property="og:title" content="${title}" />
+  <meta property="og:description" content="${desc}" />
+  <meta property="og:image" content="${escapeXML(imageUrl)}" />
+  <meta property="og:url" content="${productUrl}" />
+  <meta property="og:type" content="product" />
+  <script type="application/ld+json">
+  ${JSON.stringify(structuredData, null, 2)}
+  </script>
+</head>`;
+        
+        productHtml = productHtml.replace('</head>', headInjection);
+        fs.writeFileSync(path.join(docsDir, `product-${p.id}.html`), productHtml);
+      }
     });
 
-    xml += `  </channel>
-</rss>`;
+    xml += `  </channel>\n</rss>`;
+    sitemap += `</urlset>`;
 
-    const docsDir = path.join(__dirname, 'docs');
-    if (!fs.existsSync(docsDir)) {
-      fs.mkdirSync(docsDir);
-    }
-    
     fs.writeFileSync(path.join(docsDir, 'google-merchant.xml'), xml);
-    console.log(`Generated docs/google-merchant.xml with ${products.length} products.`);
+    fs.writeFileSync(path.join(docsDir, 'sitemap.xml'), sitemap);
+    
+    console.log(`Generated google-merchant.xml, sitemap.xml, and ${products.length} product pages.`);
   } catch (error) {
     console.error('Error generating Google Merchant feed:', error);
     process.exit(1);
