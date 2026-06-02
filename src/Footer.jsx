@@ -34,11 +34,13 @@ function Footer({ lang, onOpenFaq }) {
   };
 
   const scrollToShop = (e, type, brand) => {
-    e.preventDefault();
-    if (type) window.dispatchEvent(new CustomEvent('tph-filter', { detail: { type } }));
-    if (brand) window.dispatchEvent(new CustomEvent('tph-filter', { detail: { brand } }));
     const el = document.getElementById('shop');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) {
+      e.preventDefault();
+      if (type) window.dispatchEvent(new CustomEvent('tph-filter', { detail: { type } }));
+      if (brand) window.dispatchEvent(new CustomEvent('tph-filter', { detail: { brand } }));
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   // Facebook SVG icon
@@ -136,21 +138,21 @@ function Footer({ lang, onOpenFaq }) {
           {/* Shop */}
           <div>
             <div className="tph-footer-h">{t.shop}</div>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'backpacks')}>{t.backpack}</a>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'luggage')}>{t.luggage}</a>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'duffel')}>{t.duffel}</a>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'laptop-bags')}>{t.laptop}</a>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'sling')}>{t.sling}</a>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'camera')}>{t.camera}</a>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, 'accessory')}>{t.accessory}</a>
+            <a style={linkStyle} href="/balo.html" onClick={(e) => scrollToShop(e, 'backpacks')}>{t.backpack}</a>
+            <a style={linkStyle} href="/vali.html" onClick={(e) => scrollToShop(e, 'luggage')}>{t.luggage}</a>
+            <a style={linkStyle} href="/tui-xach.html" onClick={(e) => scrollToShop(e, 'duffel')}>{t.duffel}</a>
+            <a style={linkStyle} href="/tui-laptop.html" onClick={(e) => scrollToShop(e, 'laptop-bags')}>{t.laptop}</a>
+            <a style={linkStyle} href="/tui-deo-cheo.html" onClick={(e) => scrollToShop(e, 'sling')}>{t.sling}</a>
+            <a style={linkStyle} href="/tui-may-anh.html" onClick={(e) => scrollToShop(e, 'camera')}>{t.camera}</a>
+            <a style={linkStyle} href="/phu-kien.html" onClick={(e) => scrollToShop(e, 'accessory')}>{t.accessory}</a>
           </div>
 
           {/* Brands */}
           <div>
             <div className="tph-footer-h">{t.brands}</div>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, null, 'thule')}>Thule</a>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, null, 'case-logic')}>Case Logic</a>
-            <a style={linkStyle} onClick={(e) => scrollToShop(e, null, 'point-65')}>Point 65 North</a>
+            <a style={linkStyle} href="/thule.html" onClick={(e) => scrollToShop(e, null, 'thule')}>Thule</a>
+            <a style={linkStyle} href="/case-logic.html" onClick={(e) => scrollToShop(e, null, 'case-logic')}>Case Logic</a>
+            <a style={linkStyle} href="/point-65.html" onClick={(e) => scrollToShop(e, null, 'point-65')}>Point 65 North</a>
           </div>
 
           {/* Support */}
