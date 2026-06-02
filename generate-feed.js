@@ -262,7 +262,13 @@ async function generateFeed() {
     fs.writeFileSync(path.join(docsDir, 'google-merchant.xml'), xml);
     fs.writeFileSync(path.join(docsDir, 'sitemap.xml'), sitemap);
     
-    console.log(`Generated google-merchant.xml, sitemap.xml, and ${products.length} product pages.`);
+    // Save the static products JSON for the frontend to consume
+    fs.writeFileSync(path.join(docsDir, 'products.json'), JSON.stringify(result));
+    const publicDir = path.join(__dirname, 'public');
+    if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir);
+    fs.writeFileSync(path.join(publicDir, 'products.json'), JSON.stringify(result));
+    
+    console.log(`Generated google-merchant.xml, sitemap.xml, products.json and ${products.length} product pages.`);
   } catch (error) {
     console.error('Error generating Google Merchant feed:', error);
     process.exit(1);
