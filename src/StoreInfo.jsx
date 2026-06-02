@@ -12,7 +12,7 @@ function StoreInfo({ lang }) {
     p3: isEn ? "Warranty Support" : "Hỗ trợ bảo hành",
     b3: isEn ? "Official warranty support, zipper repairs, strap fixes... Our team is always with you on every journey." : "Hỗ trợ bảo hành chính hãng, sửa chữa khóa kéo, quai đeo... Đội ngũ của chúng tôi luôn đồng hành cùng bạn trên mọi hành trình.",
     visitEyebrow: isEn ? "VISIT OUR STORE" : "GHÉ THĂM CỬA HÀNG",
-    hours: isEn ? "Open 8:30 - 18:00 daily · Hotline: 0981 228 826" : "Mở cửa 8:30 - 18:00 hàng ngày · Hotline: 0981 228 826"
+    hours: isEn ? "Open 8:30 - 18:00 daily · Hotline: 0981 228 826 - 0964 117 868" : "Mở cửa 8:30 - 18:00 hàng ngày · Hotline: 0981 228 826 - 0964 117 868"
   };
 
   const points = [
