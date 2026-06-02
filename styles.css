@@ -464,14 +464,15 @@ html, body { margin: 0; padding: 0; background: var(--ph-cream-100); color: var(
   .tph-nav-inner { padding: 16px 24px; }
   .tph-nav-band { padding: 8px 24px; }
   .tph-nav-right { gap: 16px; }
-  .tph-nav-search { min-width: 0; max-width: 160px; margin-right: 0; }
+  .tph-nav-search { min-width: 0; max-width: 130px; margin-right: 0; padding: 6px 10px; }
   .tph-nav-search input { font-size: 12px; }
-  .tph-nav-links, .tph-wordmark, .tph-nav-band, .tph-nav-socials { display: none; } /* Hide text links on mobile, rely on search/cart */
+  .tph-nav-links, .tph-wordmark, .tph-nav-band, .tph-nav-socials { display: none !important; } /* Hide text links on mobile, rely on search/cart */
   .tph-wordmark { display: none; } /* Hide "The Pack House" text, keep logo */
   .tph-nav-band { display: none; } /* Hide the entire promotional ticker on mobile */
 
   /* Hero */
   .tph-hero { grid-template-columns: 1fr; min-height: auto; }
+  .tph-hero-actions { flex-wrap: wrap; }
   .tph-hero-art { height: 320px; }
   .tph-hero-shelf { position: relative; inset: 0; padding: 24px; flex-direction: row; flex-wrap: wrap; }
   .tph-shelf-row { border-bottom: none; gap: 16px; flex-wrap: wrap; justify-content: center; }
