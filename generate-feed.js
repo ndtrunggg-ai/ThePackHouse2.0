@@ -58,6 +58,8 @@ async function generateFeed() {
       fs.mkdirSync(docsDir);
     }
 
+    const today = new Date().toISOString().substring(0,10);
+
     let xml = `<?xml version="1.0"?>
 <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
   <channel>
@@ -70,6 +72,7 @@ async function generateFeed() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>${SITE_URL}/</loc>
+    <lastmod>${today}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -92,6 +95,7 @@ async function generateFeed() {
     Object.keys(categoryFiles).forEach(filename => {
       sitemap += `  <url>
     <loc>${SITE_URL}/${filename}</loc>
+    <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -108,8 +112,45 @@ async function generateFeed() {
         let catHtml = indexHtmlTemplate;
         catHtml = catHtml.replace(/<title>.*?<\/title>/, `<title>${meta.title}</title>`);
         catHtml = catHtml.replace(/<meta name="description" content=".*?">/, `<meta name="description" content="${meta.desc}" />`);
+        
+        const catUrl = `${SITE_URL}/${filename}`;
+        const collectionSchema = {
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": meta.title,
+          "description": meta.desc,
+          "url": catUrl
+        };
+        const catHeadInjection = `
+  <link rel="canonical" href="${catUrl}" />
+  <meta property="og:title" content="${meta.title}" />
+  <meta property="og:description" content="${meta.desc}" />
+  <meta property="og:url" content="${catUrl}" />
+  <meta property="og:type" content="website" />
+  <script type="application/ld+json">
+  ${JSON.stringify(collectionSchema, null, 2)}
+  </script>
+</head>`;
+        catHtml = catHtml.replace('</head>', catHeadInjection);
+        
         fs.writeFileSync(path.join(docsDir, filename), catHtml);
       });
+
+      // Update index.html with canonical and Website schema
+      const homeUrl = `${SITE_URL}/`;
+      const homeSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "The Pack House",
+        "url": homeUrl
+      };
+      let homeHtml = indexHtmlTemplate.replace('</head>', `
+  <link rel="canonical" href="${homeUrl}" />
+  <script type="application/ld+json">
+  ${JSON.stringify(homeSchema, null, 2)}
+  </script>
+</head>`);
+      fs.writeFileSync(indexPath, homeHtml);
     } else {
       console.warn('docs/index.html not found, cannot generate product pages.');
     }
@@ -147,6 +188,7 @@ async function generateFeed() {
       const slug = slugify(p.name);
       const filename = `${slug}-${p.id}.html`;
       const productUrl = `${SITE_URL}/${filename}`;
+      const lastmod = p.updatedAt ? `<lastmod>${p.updatedAt.substring(0,10)}</lastmod>\n    ` : '';
 
       xml += `    <item>
       <g:id>${p.id}</g:id>
@@ -165,7 +207,7 @@ async function generateFeed() {
 
       sitemap += `  <url>
     <loc>${productUrl}</loc>
-    <changefreq>weekly</changefreq>
+    ${lastmod}<changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 `;
@@ -221,6 +263,7 @@ async function generateFeed() {
         };
 
         const headInjection = `
+  <link rel="canonical" href="${productUrl}" />
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${desc}" />
   <meta property="og:image" content="${escapeXML(imageUrl)}" />
