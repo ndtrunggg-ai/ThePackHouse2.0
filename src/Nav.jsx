@@ -1,5 +1,5 @@
 import React from 'react';
-function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, setLang }) {
+function Nav({ onCartOpen, onTrackOpen, cartCount = 0, onSearchChange, searchValue, lang, setLang }) {
   const isEn = lang === 'en';
   const [supportOpen, setSupportOpen] = React.useState(false);
 
@@ -9,6 +9,7 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
     brands: isEn ? "Brands" : "Thương hiệu",
     visit: isEn ? "Visit" : "Ghé thăm",
     help: isEn ? "Help" : "Hỗ trợ",
+    track: isEn ? "Track Order" : "Theo dõi đơn",
     est: isEn ? "EST. HANOI · MMXXV" : "THÀNH LẬP TẠI HÀ NỘI · 2025",
     shipping: isEn ? "Free shipping over 2,000,000 ₫" : "Miễn phí vận chuyển từ 2.000.000 ₫",
     returns: isEn ? "30-day returns on unused goods" : "Đổi trả 30 ngày cho sản phẩm chưa dùng",
@@ -114,6 +115,7 @@ function Nav({ onCartOpen, cartCount = 0, onSearchChange, searchValue, lang, set
           <nav className="tph-nav-links">
             <a className="tph-nav-link" href="#shop" onClick={scrollToShop}>{t.shop}</a>
             <a className="tph-nav-link" href="#shop" onClick={scrollToShop}>{t.brands}</a>
+            <a className="tph-nav-link" href="#" onClick={(e) => { e.preventDefault(); onTrackOpen && onTrackOpen(); }}>{t.track}</a>
             <a className="tph-nav-link" href="#visit" onClick={scrollToVisit}>{t.visit}</a>
             <a className="tph-nav-link" href="#support" onClick={openSupport}>{t.help}</a>
           </nav>

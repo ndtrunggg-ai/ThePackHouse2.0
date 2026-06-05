@@ -10,6 +10,8 @@ import StoreInfo from './StoreInfo';
 import Faq from './Faq';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
+import OrderTrackingModal from './OrderTrackingModal';
+import { HelmetProvider } from 'react-helmet-async';
 
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { error: null }; }
@@ -29,6 +31,7 @@ class ErrorBoundary extends React.Component {
 function App() {
   const [products, setProducts] = React.useState([]);
   const [cartOpen, setCartOpen] = React.useState(false);
+  const [trackingOpen, setTrackingOpen] = React.useState(false);
   const [items, setItems] = React.useState([]);
   const getInitialBrand = () => {
     const path = window.location.pathname;
@@ -224,6 +227,7 @@ function App() {
     <>
       <Nav
         onCartOpen={() => setCartOpen(true)} cartCount={items.length}
+        onTrackOpen={() => setTrackingOpen(true)}
         searchValue={search} onSearchChange={setSearch}
         lang={lang} setLang={setLang}
       />
@@ -284,8 +288,18 @@ function App() {
         onAdd={handleAdd}
         lang={lang}
       />
+
+      <OrderTrackingModal 
+        open={trackingOpen}
+        onClose={() => setTrackingOpen(false)}
+        lang={lang}
+      />
     </>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App /></ErrorBoundary>);
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <HelmetProvider>
+    <ErrorBoundary><App /></ErrorBoundary>
+  </HelmetProvider>
+);

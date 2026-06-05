@@ -1,4 +1,6 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
+
 function ProductModal({ product, onClose, onAdd, lang }) {
   if (!product) return null;
   const isEn = lang === 'en';
@@ -33,8 +35,14 @@ function ProductModal({ product, onClose, onAdd, lang }) {
   const hasStock = product.quantity > 0;
 
   return (
-    <div className="tph-modal-overlay" onClick={onClose} style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+    <>
+      <Helmet>
+        <title>{product.name} — The Pack House</title>
+        <meta name="description" content={product.description?.substring(0, 150) || `${product.name} from ${product.brand}. Get it at The Pack House.`} />
+        <link rel="canonical" href={`https://thepackhouse.vn/${product.slug || product.name.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '')}-${product.id}.html`} />
+      </Helmet>
+      <div className="tph-modal-overlay" onClick={onClose} style={{
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
       background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center',
       zIndex: 1000, padding: '20px'
     }}>
@@ -158,6 +166,7 @@ function ProductModal({ product, onClose, onAdd, lang }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
