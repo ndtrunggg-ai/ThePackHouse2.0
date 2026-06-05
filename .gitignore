@@ -1,0 +1,24 @@
+node_modules/
+.DS_Store
+*.log
+
+# Strapi CMS
+cms/node_modules/
+cms/.tmp/
+cms/build/
+cms/.cache/
+cms/dist/
+cms/.env
+cms/public/uploads/
+
+# SQLite databases
+*.db
+*.sqlite
+
+# Temp/debug files
+fix-db.js
+
+# Environment files
+.env
+.env.*
+dist/
