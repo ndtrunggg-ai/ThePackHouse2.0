@@ -166,7 +166,7 @@ function App() {
   const filteredCount = products.filter(p =>
     (brand === "all" || p.brand === brand) &&
     (type === "all" || p.type === type) &&
-    (!search.trim() || (p.name + ' ' + p.brand + ' ' + (Array.isArray(p.specs) ? p.specs.join(' ') : (p.specs && typeof p.specs === 'object' ? Object.values(p.specs).join(' ') : (p.specs || '')))).toLowerCase().includes(search.toLowerCase()))
+    (!search.trim() || ((p.sku || '') + ' ' + (p.id || '') + ' ' + p.name + ' ' + p.brand + ' ' + (Array.isArray(p.specs) ? p.specs.join(' ') : (p.specs && typeof p.specs === 'object' ? Object.values(p.specs).join(' ') : (p.specs || '')))).toLowerCase().includes(search.toLowerCase()))
   ).length;
 
   const scrollToShop = () => {

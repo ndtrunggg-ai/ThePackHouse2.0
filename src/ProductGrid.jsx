@@ -150,7 +150,7 @@ function ProductGrid({ brand, type, search, sort, onAdd, onView, onClearFilters,
     if (type !== "all" && p.type !== type) return false;
     if (search && search.trim()) {
       const q = search.toLowerCase();
-      const hay = ((p.name || '') + ' ' + (p.brand || '') + ' ' + flattenSpecs(p.specs)).toLowerCase();
+      const hay = ((p.sku || '') + ' ' + (p.id || '') + ' ' + (p.name || '') + ' ' + (p.brand || '') + ' ' + flattenSpecs(p.specs)).toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
