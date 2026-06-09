@@ -102,6 +102,27 @@ async function generateFeed() {
 `;
     });
 
+    // Add policy pages to sitemap
+    sitemap += `  <url>
+    <loc>${SITE_URL}/privacy-policy.html</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/terms-of-service.html</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/return-policy.html</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+`;
+
     const indexPath = path.join(docsDir, 'index.html');
     let indexHtmlTemplate = '';
     if (fs.existsSync(indexPath)) {

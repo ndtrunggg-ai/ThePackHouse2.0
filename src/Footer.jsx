@@ -181,7 +181,19 @@ function Footer({ lang, onOpenFaq }) {
 
       <div className="tph-footer-bottom">
         <span>{t.bottom1}</span>
-        <span>{t.bottom2}</span>
+        <span style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <a href="/privacy-policy.html" style={{ color: 'inherit', textDecoration: 'none' }} onMouseEnter={e => e.target.style.color='var(--ph-bronze-500)'} onMouseLeave={e => e.target.style.color='inherit'}>
+            {isEn ? "Privacy Policy" : "Chính sách bảo mật"}
+          </a>
+          <span style={{ color: 'var(--ph-sand-500)' }}>·</span>
+          <a href="/terms-of-service.html" style={{ color: 'inherit', textDecoration: 'none' }} onMouseEnter={e => e.target.style.color='var(--ph-bronze-500)'} onMouseLeave={e => e.target.style.color='inherit'}>
+            {isEn ? "Terms of Service" : "Điều khoản dịch vụ"}
+          </a>
+          <span style={{ color: 'var(--ph-sand-500)' }}>·</span>
+          <a href="/return-policy.html" style={{ color: 'inherit', textDecoration: 'none' }} onMouseEnter={e => e.target.style.color='var(--ph-bronze-500)'} onMouseLeave={e => e.target.style.color='inherit'}>
+            {isEn ? "Shipping & Returns" : "Vận chuyển & Trả hàng"}
+          </a>
+        </span>
       </div>
     </footer>
   );

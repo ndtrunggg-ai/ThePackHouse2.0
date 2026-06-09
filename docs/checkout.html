@@ -259,7 +259,7 @@
     <button class="co-submit" id="co-btn" onclick="placeOrder()">
       Hoàn tất đơn hàng
     </button>
-    <p style="font-size:11px;color:var(--ph-sand-500);text-align:center;margin-top:18px">Bằng cách đặt hàng, bạn đồng ý với <a href="#terms" style="color:var(--ph-cocoa-850)">Điều khoản dịch vụ</a> của chúng tôi.</p>
+    <p style="font-size:11px;color:var(--ph-sand-500);text-align:center;margin-top:18px" id="co-terms-text">Bằng cách đặt hàng, bạn đồng ý với <a href="/terms-of-service.html" style="color:var(--ph-cocoa-850)" target="_blank">Điều khoản dịch vụ</a> của chúng tôi.</p>
   </div>
 
   <!-- RIGHT: Order summary -->
@@ -588,6 +588,7 @@
     document.querySelector('.co-total-row.grand span:first-child').textContent = s.total;
     document.querySelector('.tph-eyebrow[data-accepted]').textContent = s.accepted;
     document.getElementById('store-hours').textContent = s.storeHours;
+    document.getElementById('co-terms-text').innerHTML = s.terms + ' <a href="/terms-of-service.html" style="color:var(--ph-cocoa-850)" target="_blank">' + s.termsLink + '</a> ' + s.termsEnd;
     // recalc display
     document.getElementById('shipping-val').textContent = shippingFee ? Number(shippingFee).toLocaleString(lang==='en'?'en-US':'vi-VN')+' ₫' : s.freeShip;
   }
