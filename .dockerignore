@@ -1,0 +1,12 @@
+.git
+node_modules
+docs
+cms
+notification-middleware
+api
+scripts
+docker-compose.yml
+.env
+.env.*
+*.md
+test_*.js

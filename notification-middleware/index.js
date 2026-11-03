@@ -8,7 +8,7 @@ app.use(cors());
 
 // Proxy requests to Strapi Cloud to bypass CORS for the Admin Panel
 app.use('/proxy', createProxyMiddleware({ 
-  target: 'https://whimsical-renewal-84c9832818.strapiapp.com', 
+  target: process.env.STRAPI_PROXY_TARGET || 'https://whimsical-renewal-84c9832818.strapiapp.com', 
   changeOrigin: true,
   pathRewrite: { '^/proxy': '' }
 }));
