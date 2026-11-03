@@ -17,7 +17,7 @@ function OrderTrackingModal({ open, onClose, lang }) {
     track: isEn ? "Track Order" : "Kiểm tra đơn",
     loading: isEn ? "Searching..." : "Đang tìm kiếm...",
     errorNotFound: isEn ? "Order not found. Please check your details." : "Không tìm thấy đơn hàng. Vui lòng kiểm tra lại thông tin.",
-    errorServer: isEn ? "Could not connect to the server. (Check Strapi API permissions)" : "Không thể kết nối với máy chủ. (Kiểm tra quyền truy cập Strapi)",
+    errorServer: isEn ? "Could not connect to the server. Please try again." : "Không thể kết nối với máy chủ. Vui lòng thử lại.",
     statusTitle: isEn ? "Order Status" : "Trạng thái đơn hàng",
     back: isEn ? "Search Again" : "Tìm lại",
     date: isEn ? "Order Date:" : "Ngày đặt:",
@@ -41,39 +41,18 @@ function OrderTrackingModal({ open, onClose, lang }) {
     setOrderData(null);
 
     try {
-      // Direct query to Strapi. 
-      // NOTE: This requires Strapi to allow public find/findOne on /api/orders,
-      // and ideally filtering by documentId/id and phone.
-      const res = await fetch(`${window.ENV.API_URL}/api/orders?filters[documentId][$eq]=${encodeURIComponent(orderId)}&filters[phone][$eq]=${encodeURIComponent(phone)}`);
-      
-      if (res.status === 403) {
-        throw new Error("403");
-      }
-      if (!res.ok) {
-        throw new Error("Network");
-      }
-      
-      const data = await res.json();
-      
-      // Strapi v5 returns arrays in data
-      if (data && data.data && data.data.length > 0) {
-        setOrderData(data.data[0]);
-      } else {
-        // Fallback: maybe they entered the numerical ID instead of documentId
-        const resId = await fetch(`${window.ENV.API_URL}/api/orders?filters[id][$eq]=${encodeURIComponent(orderId)}&filters[phone][$eq]=${encodeURIComponent(phone)}`);
-        const dataId = await resId.json();
-        if (dataId && dataId.data && dataId.data.length > 0) {
-          setOrderData(dataId.data[0]);
-        } else {
-          setError(t.errorNotFound);
-        }
-      }
-    } catch (err) {
-      if (err.message === "403") {
+      const res = await fetch(`${window.ENV.API_URL}/api/orders/track?id=${encodeURIComponent(orderId.trim())}&phone=${encodeURIComponent(phone.trim())}`);
+
+      if (res.status === 404) {
+        setError(t.errorNotFound);
+      } else if (!res.ok) {
         setError(t.errorServer);
       } else {
-        setError(t.errorNotFound);
+        const data = await res.json();
+        setOrderData(data.data);
       }
+    } catch (err) {
+      setError(t.errorServer);
     } finally {
       setLoading(false);
     }

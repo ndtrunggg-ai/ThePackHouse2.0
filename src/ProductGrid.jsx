@@ -8,7 +8,7 @@ function flattenSpecs(val) {
   return String(val);
 }
 
-// Extract all image URLs from a Strapi product
+// Extract all image URLs from a product
 function getImageUrls(p) {
   if (p.image_url) return [p.image_url];
   if (p.image) {

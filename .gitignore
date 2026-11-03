@@ -2,14 +2,11 @@ node_modules/
 .DS_Store
 *.log
 
-# Strapi CMS
-cms/node_modules/
-cms/.tmp/
-cms/build/
-cms/.cache/
-cms/dist/
-cms/.env
-cms/public/uploads/
+# API data when run outside Docker
+api/.data/
+
+# TLS certificates mounted into the web container
+certs/
 
 # SQLite databases
 *.db

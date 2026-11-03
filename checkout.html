@@ -439,19 +439,26 @@
       }
     };
 
+    var orderNumber;
     try {
-      await fetch(`${window.ENV.API_URL}/api/orders`, {
+      var orderResp = await fetch(`${window.ENV.API_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)
       });
+      if (!orderResp.ok) throw new Error('HTTP ' + orderResp.status);
+      orderNumber = (await orderResp.json()).data.id;
     } catch(e) {
-      console.error('Lỗi tạo đơn trên CMS', e);
+      console.error('Lỗi tạo đơn hàng', e);
+      showAlert('Không thể tạo đơn hàng. Vui lòng thử lại hoặc liên hệ cửa hàng.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Hoàn tất đơn hàng';
+      return;
     }
 
     if (selectedPayment === 'cod') {
       setTimeout(function() {
-        showAlert('Đặt hàng thành công! Chúng tôi sẽ liên hệ xác nhận đơn hàng của bạn sớm nhất.', 'success');
+        showAlert('Đặt hàng thành công! Mã đơn hàng của bạn là #' + orderNumber + '. Chúng tôi sẽ liên hệ xác nhận đơn hàng của bạn sớm nhất.', 'success');
         btn.disabled = false;
         btn.textContent = 'Hoàn tất đơn hàng';
         sessionStorage.removeItem('tph_cart');

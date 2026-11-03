@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import AdminProducts from './AdminProducts';
 
-const API_URL = window.ENV?.API_URL || 'https://whimsical-renewal-84c9832818.strapiapp.com';
+const API_URL = window.ENV?.API_URL || window.location.origin;
 
 function AdminApp() {
   const [token, setToken] = React.useState(localStorage.getItem("admin_token"));
@@ -15,33 +16,33 @@ function AdminApp() {
 
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
 
+  const handleUnauthorized = React.useCallback(() => {
+    setToken(null);
+    localStorage.removeItem("admin_token");
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setIsLoggingIn(true);
-    
-    // If Strapi is asleep, it takes ~30-40s to wake up
-    const timeoutAlert = setTimeout(() => {
-      setError("Hệ thống đang khởi động lại máy chủ (có thể mất 30-40 giây). Vui lòng không tắt trang...");
-    }, 5000);
 
     try {
-      const res = await fetch(`${API_URL}/admin/login`, {
+      const res = await fetch(`${API_URL}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email, password })
       });
-      clearTimeout(timeoutAlert);
-      
-      const data = await res.json();
+
+      const data = await res.json().catch(() => ({}));
       if (data.data && data.data.token) {
         localStorage.setItem("admin_token", data.data.token);
         setToken(data.data.token);
+      } else if (res.status === 429) {
+        setError("Đăng nhập quá nhiều lần. Vui lòng thử lại sau vài phút.");
       } else {
         setError("Thông tin đăng nhập không hợp lệ");
       }
     } catch (err) {
-      clearTimeout(timeoutAlert);
       setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau 1 phút.");
     } finally {
       setIsLoggingIn(false);
@@ -51,17 +52,16 @@ function AdminApp() {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/content-manager/collection-types/api::order.order?sort=createdAt:DESC`, {
+      const res = await fetch(`${API_URL}/api/admin/orders`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       if (res.status === 401 || res.status === 403) {
-        setToken(null);
-        localStorage.removeItem("admin_token");
+        handleUnauthorized();
       } else {
         const data = await res.json();
-        setOrders(data.results || []);
+        setOrders(data.data || []);
       }
     } catch (err) {
       console.error(err);
@@ -72,8 +72,7 @@ function AdminApp() {
 
   const handleUpdateStatus = async (order, newStatus) => {
     try {
-      const targetId = order.documentId || order.id;
-      const res = await fetch(`${API_URL}/content-manager/collection-types/api::order.order/${targetId}`, {
+      const res = await fetch(`${API_URL}/api/admin/orders/${order.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -82,7 +81,7 @@ function AdminApp() {
         body: JSON.stringify({ orderStatus: newStatus })
       });
       if (res.ok) {
-        setOrders(orders.map(o => (o.documentId || o.id) === targetId ? { ...o, orderStatus: newStatus } : o));
+        setOrders(orders.map(o => o.id === order.id ? { ...o, orderStatus: newStatus } : o));
         setSelectedOrder({ ...selectedOrder, orderStatus: newStatus });
       } else {
         const errData = await res.json();
@@ -219,13 +218,7 @@ function AdminApp() {
           </React.Fragment>
         );
       case 'products':
-        return (
-          <div className="empty-state" style={{marginTop:'40px'}}>
-            <span style={{fontSize:'32px'}}>📦</span>
-            <h3 style={{marginTop:'16px'}}>Quản lý Sản phẩm</h3>
-            <p>Tính năng quản lý kho và sản phẩm trực tiếp từ Frontend đang được phát triển.<br/>Vui lòng truy cập hệ thống Strapi Cloud để thêm hoặc chỉnh sửa sản phẩm.</p>
-          </div>
-        );
+        return <AdminProducts apiUrl={API_URL} token={token} onUnauthorized={handleUnauthorized} />;
       case 'customers':
         const customerMap = {};
         orders.forEach(o => {

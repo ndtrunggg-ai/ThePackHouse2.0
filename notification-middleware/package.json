@@ -1,15 +1,9 @@
 {
   "name": "notification-middleware",
   "version": "1.0.0",
-  "description": "Strapi Webhook Receiver for The Pack House",
+  "description": "Order notification receiver for The Pack House",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
-  },
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.6",
-    "express": "^4.19.2",
-    "http-proxy-middleware": "^4.0.0"
   }
 }

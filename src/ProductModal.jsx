@@ -6,7 +6,7 @@ function ProductModal({ product, onClose, onAdd, lang }) {
   const isEn = lang === 'en';
   const fmt = (n) => (Number(n) || 0).toLocaleString(isEn ? 'en-US' : 'vi-VN') + ' ₫';
 
-  // Build image list from Strapi media array or legacy field
+  // Build image list from media array or legacy field
   const images = React.useMemo(() => {
     if (product.image_url) return [product.image_url];
     if (product.image) {
