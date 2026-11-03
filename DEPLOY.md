@@ -94,4 +94,4 @@ Measured with all three containers pinned to one CPU core during a full test run
 | `api` | 13 MB | 45 MB | 256 MB |
 | `notifier` | 10 MB | 14 MB | 64 MB |
 
-The stack starts serving in about 5 seconds, and the api restarts in about 1 second.
+The stack starts serving in about 5 seconds once the images are pulled, and the api restarts in 1 to 2 seconds.
