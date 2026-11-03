@@ -2,10 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const API_URL = 'https://whimsical-renewal-84c9832818.strapiapp.com/api/products?populate=*&pagination[pageSize]=200';
-const SITE_URL = 'https://thepackhouse.vn';
+const STRAPI_URL = process.env.STRAPI_URL || 'https://whimsical-renewal-84c9832818.strapiapp.com';
+const API_URL = `${STRAPI_URL}/api/products?populate=*&pagination[pageSize]=200`;
+const SITE_URL = process.env.SITE_URL || 'https://thepackhouse.vn';
+// When set, products are read from this JSON file instead of being fetched from Strapi
+const PRODUCTS_SNAPSHOT = process.env.PRODUCTS_SNAPSHOT;
 
 function fetchProducts() {
+  if (PRODUCTS_SNAPSHOT) {
+    return Promise.resolve(JSON.parse(fs.readFileSync(PRODUCTS_SNAPSHOT, 'utf8')));
+  }
   return new Promise((resolve, reject) => {
     https.get(API_URL, (res) => {
       let data = '';
@@ -191,7 +197,7 @@ async function generateFeed() {
         }
         
         if (url) {
-          imageUrl = url.startsWith('/') ? `https://whimsical-renewal-84c9832818.strapiapp.com${url}` : url;
+          imageUrl = url.startsWith('/') ? `${STRAPI_URL}${url}` : url;
         }
       }
       

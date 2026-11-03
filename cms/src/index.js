@@ -18,18 +18,20 @@ module.exports = {
    */
   async bootstrap({ strapi }) {
     try {
-      // 1. Enable public permission for creating an order
+      // 1. Enable the public permissions the storefront needs
       const publicRole = await strapi.db.query('plugin::users-permissions.role').findOne({ where: { type: 'public' } });
       if (publicRole) {
-        const action = 'api::order.order.create';
-        const existingPermission = await strapi.db.query('plugin::users-permissions.permission').findOne({
-          where: { action, role: publicRole.id }
-        });
-        if (!existingPermission) {
-          await strapi.db.query('plugin::users-permissions.permission').create({
-            data: { action, role: publicRole.id }
+        const actions = ['api::order.order.create', 'api::product.product.find', 'api::product.product.findOne'];
+        for (const action of actions) {
+          const existingPermission = await strapi.db.query('plugin::users-permissions.permission').findOne({
+            where: { action, role: publicRole.id }
           });
-          console.log(`Granted public permission to create orders`);
+          if (!existingPermission) {
+            await strapi.db.query('plugin::users-permissions.permission').create({
+              data: { action, role: publicRole.id }
+            });
+            console.log(`Granted public permission: ${action}`);
+          }
         }
       }
       
@@ -37,7 +39,7 @@ module.exports = {
       const webhookStore = strapi.get('webhookStore');
       if (webhookStore) {
         const webhooks = await webhookStore.findWebhooks();
-        const webhookUrl = 'http://localhost:4000/webhook';
+        const webhookUrl = process.env.NOTIFICATION_WEBHOOK_URL || 'http://localhost:4000/webhook';
         const existingWebhook = webhooks.find(w => w.url === webhookUrl);
         if (!existingWebhook) {
           await webhookStore.createWebhook({
